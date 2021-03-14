@@ -18,7 +18,7 @@ public class ItemBoundary {
 	private ItemAttributes itemAttributes;
 	
 	public ItemBoundary(ItemID itemID, String type, String name, boolean active, String createdTimestamp,
-			CreatedBy createdBy, Location location, ItemAttributes itemAttributes) {
+			CreatedBy createdBy , Location location, ItemAttributes itemAttributes) {
 		super();
 		this.itemID = itemID;
 		this.type = type;
