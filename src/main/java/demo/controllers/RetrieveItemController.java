@@ -23,7 +23,7 @@ public class RetrieveItemController {
 
 
 		ItemBoundary rv = new ItemBoundary(new ItemID(userSpace,"99"), "demoType", "demo Item", true, "2021-03-07T09:55:05.248+0000", new CreatedBy(new UserID(userSpace,userEmail)), new Location(32.115139,34.817804), new ItemAttributes("can be set to any value you wish",
-				"you can also name the attributes any name you like",58,false));
+				"you can also name the attributes any name you like ",58,false));
 		System.out.println(rv);
 		return rv;
 	}
