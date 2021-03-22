@@ -23,7 +23,7 @@ import demo.models.UserID;
 
 @RestController
 public class AdminController {
-
+	/////
 	@RequestMapping(path = "/twins/admin/users/{userSpace}/{userEmail}",
 			method = RequestMethod.DELETE)
 	public void DeleteAllUser(@PathVariable("userSpace") String userSpace,
