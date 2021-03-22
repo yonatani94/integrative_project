@@ -11,8 +11,23 @@ import demo.models.NewUserDetails;
 import demo.models.UserID;
 
 @RestController
-public class UserController {
+public class UserRelatedController {
+	
+	
 	public String SPACE = "2021.project";
+	
+	@RequestMapping(
+			path = "/twins/users",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+		public UserBoundary createUser (@RequestBody NewUserDetails user) {
+			// STUB IMPLEMENTATION 
+		    UserBoundary rv = new UserBoundary(new UserID(SPACE, user.getEmail()), user.getRole(), user.getUsername(), user.getAvatar());
+		    System.out.println(rv);
+		
+			return rv;
+		}
 
 	@RequestMapping(
 			path = "/twins/users/login/{userSpace}/{userEmail}",
@@ -24,17 +39,7 @@ public class UserController {
 			return rv;
 		}
 	
-	@RequestMapping(
-			path = "/twins/users",
-			method = RequestMethod.POST,
-			produces = MediaType.APPLICATION_JSON_VALUE,
-			consumes = MediaType.APPLICATION_JSON_VALUE)
-		public UserBoundary createUser (@RequestBody NewUserDetails user) {
-			// STUB IMPLEMENTATION 
-		    UserBoundary rv = new UserBoundary(new UserID(SPACE, user.getEmail()), user.getRole(), user.getUsername(), user.getAvatar());
-		    System.out.println(rv);
-			return rv;
-		}
+
 	@RequestMapping(
 			path = "/twins/users/{userSpace}/{userEmail}",
 			method = RequestMethod.PUT,
