@@ -24,25 +24,31 @@ import demo.models.UserID;
 @RestController
 public class AdminController {
 
-	@RequestMapping(path = "/twins/admin/users/{userSpace}/{userEmail}", method = RequestMethod.DELETE)
+	@RequestMapping(path = "/twins/admin/users/{userSpace}/{userEmail}",
+			method = RequestMethod.DELETE)
 	public void DeleteAllUser(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
+		
 		return;
 	}
 
-	@RequestMapping(path = "/twins/admin/items/{userSpace}/{userEmail}", method = RequestMethod.DELETE)
+	@RequestMapping(path = "/twins/admin/items/{userSpace}/{userEmail}", 
+			method = RequestMethod.DELETE)
 	public void DeleteAllItem(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
 		return;
 	}
 
-	@RequestMapping(path = "/twins/admin/operations/{userSpace}/{userEmail}", method = RequestMethod.DELETE)
+	@RequestMapping(path = "/twins/admin/operations/{userSpace}/{userEmail}", 
+			method = RequestMethod.DELETE)
 	public void DeleteAllOperation(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
 		return;
 	}
 
-	@RequestMapping(path = "/twins/admin/users/{userSpace}/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/twins/admin/users/{userSpace}/{userEmail}", 
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary[] getUsers(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
 
@@ -52,7 +58,9 @@ public class AdminController {
 		return rv;
 	}
 
-	@RequestMapping(path = "/twins/admin/operations/{userSpace}/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/twins/admin/operations/{userSpace}/{userEmail}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public OperationBoundary[] getOperations(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
 
