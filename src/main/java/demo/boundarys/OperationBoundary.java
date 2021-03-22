@@ -16,6 +16,10 @@ public class OperationBoundary {
 	private Map<String, Object> invokedBy;
 	private Map<String, Object> operationAttributes;
 
+	public OperationBoundary() {
+		super();
+	}
+
 	public OperationBoundary(OperationId operationId, String type, Map<String, Object> item, Date createdTimestamp,
 			Map<String, Object> invokedBy, Map<String, Object> operationAttributes) {
 		super();
