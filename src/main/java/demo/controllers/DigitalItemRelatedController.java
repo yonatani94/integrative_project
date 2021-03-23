@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,4 +55,23 @@ public class DigitalItemRelatedController {
 		return rv;
 	}
 
+	@RequestMapping(
+			path = "/twins/items/{userSpace}/{userEmail}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ItemBoundary createItem (@RequestBody ItemBoundary itemBoundary) {
+		// STUB IMPLEMENTATION 
+		return itemBoundary;
+	}
+	
+	@RequestMapping(
+			path = "/twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}",
+			method = RequestMethod.PUT,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void updateItem (@PathVariable("userSpace") String userSpace, @PathVariable("userEmail") String userEmail,
+			@PathVariable("itemSpace") String itemSpace, @PathVariable("itemId") String itemId, @RequestBody ItemBoundary itemBoundry) {
+		// STUB IMPLEMENTATION 
+	}
+	
 }
