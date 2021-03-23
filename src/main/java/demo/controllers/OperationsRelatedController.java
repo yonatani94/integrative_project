@@ -1,14 +1,16 @@
 package demo.controllers;
 
-import java.util.Date;
-import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import demo.boundarys.OperationBoundary;
+import demo.models.OperationId;
 
 @RestController
 public class OperationsRelatedController {
@@ -19,8 +21,7 @@ public class OperationsRelatedController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public OperationBoundary invokeOperationOnItem(@RequestBody OperationBoundary operationBoundary) {
-		OperationBoundary boundary = new OperationBoundary(null, null, null, null, null, null);
-		boundary.toString();
+		operationBoundary.setOperationId(new OperationId("asd", "123"));
 		return operationBoundary;
 	}
 }
