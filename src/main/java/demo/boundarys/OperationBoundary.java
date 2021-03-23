@@ -3,6 +3,8 @@ package demo.boundarys;
 import java.util.Date;
 import java.util.Map;
 
+import demo.models.InvokedBy;
+import demo.models.Item;
 import demo.models.ItemID;
 import demo.models.OperationId;
 import demo.models.UserID;
@@ -11,17 +13,24 @@ public class OperationBoundary {
 
 	private OperationId operationId;
 	private String type;
-	private Map<String, Object> item;
+	private Item item;
 	private Date createdTimestamp;
-	private Map<String, Object> invokedBy;
+	private InvokedBy invokedBy;
 	private Map<String, Object> operationAttributes;
 
 	public OperationBoundary() {
 		super();
 	}
 
-	public OperationBoundary(OperationId operationId, String type, Map<String, Object> item, Date createdTimestamp,
-			Map<String, Object> invokedBy, Map<String, Object> operationAttributes) {
+	@Override
+	public String toString() {
+		return "OperationBoundary [operationId=" + operationId + ", type=" + type + ", item=" + item
+				+ ", createdTimestamp=" + createdTimestamp + ", invokedBy=" + invokedBy + ", operationAttributes="
+				+ operationAttributes + "]";
+	}
+
+	public OperationBoundary(OperationId operationId, String type, Item item, Date createdTimestamp,
+			InvokedBy invokedBy, Map<String, Object> operationAttributes) {
 		super();
 		this.operationId = operationId;
 		this.type = type;
@@ -47,14 +56,6 @@ public class OperationBoundary {
 		this.type = type;
 	}
 
-	public Map<String, Object> getItem() {
-		return item;
-	}
-
-	public void setItem(Map<String, Object> item) {
-		this.item = item;
-	}
-
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
 	}
@@ -63,28 +64,28 @@ public class OperationBoundary {
 		this.createdTimestamp = createdTimestamp;
 	}
 
-	public Map<String, Object> getInvokedBy() {
+	public Map<String, Object> getOperationAttributes() {
+		return operationAttributes;
+	}
+
+	public Item getItem() {
+		return item;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
+
+	public InvokedBy getInvokedBy() {
 		return invokedBy;
 	}
 
-	public void setInvokedBy(Map<String, Object> invokedBy) {
+	public void setInvokedBy(InvokedBy invokedBy) {
 		this.invokedBy = invokedBy;
-	}
-
-	public Map<String, Object> getOperationAttributes() {
-		return operationAttributes;
 	}
 
 	public void setOperationAttributes(Map<String, Object> operationAttributes) {
 		this.operationAttributes = operationAttributes;
 	}
-
-	@Override
-	public String toString() {
-		return "OperationBoundary [operationId=" + operationId + ", type=" + type + ", item=" + item
-				+ ", createdTimestamp=" + createdTimestamp + ", invokedBy=" + invokedBy + ", operationAttributes="
-				+ operationAttributes + "]";
-	}
-
 
 }

@@ -12,40 +12,30 @@ import demo.models.UserID;
 
 @RestController
 public class UserRelatedController {
-	
-	
+
 	public String SPACE = "2021.project";
-	
-	@RequestMapping(
-			path = "/twins/users",
-			method = RequestMethod.POST,
-			produces = MediaType.APPLICATION_JSON_VALUE,
-			consumes = MediaType.APPLICATION_JSON_VALUE)
-		public UserBoundary createUser (@RequestBody NewUserDetails user) {
-			// STUB IMPLEMENTATION 
-		    UserBoundary rv = new UserBoundary(new UserID(SPACE, user.getEmail()), user.getRole(), user.getUsername(), user.getAvatar());
-		    System.out.println(rv);
-		
-			return rv;
-		}
 
-	@RequestMapping(
-			path = "/twins/users/login/{userSpace}/{userEmail}",
-			method = RequestMethod.GET,
-			produces = MediaType.APPLICATION_JSON_VALUE)
-		public UserBoundary getUserSpace(@PathVariable("userSpace") String userSpace, @PathVariable("userEmail") String userEmail) {
-		    UserBoundary rv = new UserBoundary(new UserID(userSpace, userEmail), "DevOps", "YardenDev", "Owl");
-		    System.out.println(rv);
-			return rv;
-		}
-	
+	@RequestMapping(path = "/twins/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public UserBoundary createUser(@RequestBody NewUserDetails user) {
+		// STUB IMPLEMENTATION
+		UserBoundary rv = new UserBoundary(new UserID(SPACE, user.getEmail()), user.getRole(), user.getUsername(),
+				user.getAvatar());
+		System.out.println(rv);
 
-	@RequestMapping(
-			path = "/twins/users/{userSpace}/{userEmail}",
-			method = RequestMethod.PUT,
-			consumes = MediaType.APPLICATION_JSON_VALUE)
-		public void updateUser (@PathVariable("userSpace") String userSpace, @PathVariable("userEmail") String userEmail
-				,@RequestBody UserBoundary user_boundry) {
-			// STUB IMPLEMENTATION 
-		}
+		return rv;
+	}
+
+	@RequestMapping(path = "/twins/users/login/{userSpace}/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public UserBoundary getUserSpace(@PathVariable("userSpace") String userSpace,
+			@PathVariable("userEmail") String userEmail) {
+		UserBoundary rv = new UserBoundary(new UserID(userSpace, userEmail), "DevOps", "YardenDev", "Owl");
+		System.out.println(rv);
+		return rv;
+	}
+
+	@RequestMapping(path = "/twins/users/{userSpace}/{userEmail}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void updateUser(@PathVariable("userSpace") String userSpace, @PathVariable("userEmail") String userEmail,
+			@RequestBody UserBoundary user_boundry) {
+		// STUB IMPLEMENTATION
+	}
 }

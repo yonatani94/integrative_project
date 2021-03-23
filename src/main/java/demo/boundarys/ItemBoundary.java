@@ -1,7 +1,9 @@
 package demo.boundarys;
 
+import java.util.Date;
+import java.util.Map;
+
 import demo.models.CreatedBy;
-import demo.models.ItemAttributes;
 import demo.models.ItemID;
 import demo.models.Location;
 import demo.models.OperationId;
@@ -12,13 +14,13 @@ public class ItemBoundary {
 	private String type;
 	private String name;
 	private boolean active;
-	private String createdTimestamp;
+	private Date createdTimestamp;
 	private CreatedBy createdBy;
 	private Location location;
-	private ItemAttributes itemAttributes;
-	
-	public ItemBoundary(ItemID itemID, String type, String name, boolean active, String createdTimestamp,
-			CreatedBy createdBy , Location location, ItemAttributes itemAttributes) {
+	private Map<String, Object> itemAttributes;
+
+	public ItemBoundary(ItemID itemID, String type, String name, boolean active, Date createdTimestamp,
+			CreatedBy createdBy, Location location, Map<String, Object> itemAttributes) {
 		super();
 		this.itemID = itemID;
 		this.type = type;
@@ -62,11 +64,11 @@ public class ItemBoundary {
 		this.active = active;
 	}
 
-	public String getCreatedTimestamp() {
+	public Date getCreatedTimestamp() {
 		return createdTimestamp;
 	}
 
-	public void setCreatedTimestamp(String createdTimestamp) {
+	public void setCreatedTimestamp(Date createdTimestamp) {
 		this.createdTimestamp = createdTimestamp;
 	}
 
@@ -86,11 +88,11 @@ public class ItemBoundary {
 		this.location = location;
 	}
 
-	public ItemAttributes getItemAttributes() {
+	public Map<String, Object> getItemAttributes() {
 		return itemAttributes;
 	}
 
-	public void setItemAttributes(ItemAttributes itemAttributes) {
+	public void setItemAttributes(Map<String, Object> itemAttributes) {
 		this.itemAttributes = itemAttributes;
 	}
 
@@ -100,8 +102,5 @@ public class ItemBoundary {
 				+ ", createdTimestamp=" + createdTimestamp + ", createdBy=" + createdBy + ", location=" + location
 				+ ", itemAttributes=" + itemAttributes + "]";
 	}
-	
-	
-	
-	
+
 }
