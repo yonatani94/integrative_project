@@ -1,4 +1,4 @@
-package demo.boundarys;
+package restapi.boundarys;
 
 import java.util.Date;
 

@@ -1,12 +1,12 @@
-package demo.boundarys;
+package restapi.boundarys;
 
 import java.util.Date;
 import java.util.Map;
 
-import demo.models.CreatedBy;
-import demo.models.ItemID;
-import demo.models.Location;
-import demo.models.OperationId;
+import restapi.models.CreatedBy;
+import restapi.models.ItemID;
+import restapi.models.Location;
+import restapi.models.OperationId;
 
 public class ItemBoundary {
 

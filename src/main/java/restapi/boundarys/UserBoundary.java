@@ -1,6 +1,6 @@
-package demo.boundarys;
+package restapi.boundarys;
 
-import demo.models.UserID;
+import restapi.models.UserID;
 
 public class UserBoundary {
 

@@ -1,4 +1,4 @@
-package demo.models;
+package restapi.models;
 
 public class NewUserDetails {
 	String email;

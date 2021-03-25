@@ -1,4 +1,4 @@
-package demo.controllers;
+package restapi.controllers;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import demo.boundarys.OperationBoundary;
-import demo.models.InvokedBy;
-import demo.models.Item;
-import demo.models.ItemID;
-import demo.models.OperationId;
-import demo.models.UserID;
+
+import restapi.boundarys.OperationBoundary;
+import restapi.models.InvokedBy;
+import restapi.models.Item;
+import restapi.models.ItemID;
+import restapi.models.OperationId;
+import restapi.models.UserID;
 
 @RestController
 public class OperationsRelatedController {

@@ -1,4 +1,4 @@
-package demo.models;
+package restapi.models;
 
 public class Item {
 	private ItemID itemId;
