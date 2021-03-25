@@ -31,6 +31,12 @@ public class ItemBoundary {
 		this.location = location;
 		this.itemAttributes = itemAttributes;
 	}
+	
+
+	public ItemBoundary() {
+		super();
+	}
+
 
 	public ItemID getItemID() {
 		return itemID;
