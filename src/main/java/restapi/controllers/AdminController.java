@@ -1,28 +1,30 @@
 package restapi.controllers;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import restapi.boundarys.ItemBoundary;
-import restapi.boundarys.OperationBoundary;
+
 import restapi.boundarys.UserBoundary;
-import restapi.models.CreatedBy;
-import restapi.models.ItemID;
-import restapi.models.Location;
-import restapi.models.OperationId;
+
 import restapi.models.UserID;
+import twins.logic.UsersService;
 
 @RestController
 public class AdminController {
-	/////
+	private UsersService userService;
+	
+	@Autowired
+	public void setMessageLogic(UsersService userService) {
+		this.userService = userService;
+	}
 	@RequestMapping(path = "/twins/admin/users/{userSpace}/{userEmail}",
 			method = RequestMethod.DELETE)
 	public void DeleteAllUser(@PathVariable("userSpace") String userSpace,
@@ -51,10 +53,14 @@ public class AdminController {
 	public UserBoundary[] getUsers(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
 
-		UserBoundary[] rv = new UserBoundary[] {
-				new UserBoundary(new UserID(userSpace, userEmail), "QA", "username", "Cat") };
-		System.out.println(rv);
-		return rv;
+		List<UserBoundary> rv = this.userService.getAllUsers(userSpace, userEmail);
+		
+		/*
+		 * UserBoundary[] rv = new UserBoundary[] { new UserBoundary(new
+		 * UserID(userSpace, userEmail), "QA", "username", "Cat") };
+		 * System.out.println(rv);
+		 */
+		return rv.toArray(new UserBoundary[0]);
 	}
 
 }
