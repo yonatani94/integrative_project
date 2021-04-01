@@ -1,7 +1,5 @@
 package restapi.controllers;
 
-
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import restapi.boundarys.UserBoundary;
 
 import restapi.models.UserID;
@@ -19,48 +16,44 @@ import twins.logic.UsersService;
 
 @RestController
 public class AdminController {
-	private UsersService userService;
-	
-	@Autowired
-	public void setMessageLogic(UsersService userService) {
-		this.userService = userService;
-	}
-	@RequestMapping(path = "/twins/admin/users/{userSpace}/{userEmail}",
-			method = RequestMethod.DELETE)
+	/*
+	 * private UsersService userService;
+	 * 
+	 * @Autowired public void setUserService(UsersService userService) {
+	 * this.userService = userService; }
+	 */
+
+	@RequestMapping(path = "/twins/admin/users/{userSpace}/{userEmail}", method = RequestMethod.DELETE)
 	public void DeleteAllUser(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
-		
+
 		return;
 	}
 
-	@RequestMapping(path = "/twins/admin/items/{userSpace}/{userEmail}", 
-			method = RequestMethod.DELETE)
+	@RequestMapping(path = "/twins/admin/items/{userSpace}/{userEmail}", method = RequestMethod.DELETE)
 	public void DeleteAllItem(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
 		return;
 	}
 
-	@RequestMapping(path = "/twins/admin/operations/{userSpace}/{userEmail}", 
-			method = RequestMethod.DELETE)
+	@RequestMapping(path = "/twins/admin/operations/{userSpace}/{userEmail}", method = RequestMethod.DELETE)
 	public void DeleteAllOperation(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
 		return;
 	}
 
-	@RequestMapping(path = "/twins/admin/users/{userSpace}/{userEmail}", 
-			method = RequestMethod.GET,
-			produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/twins/admin/users/{userSpace}/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary[] getUsers(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
 
-		List<UserBoundary> rv = this.userService.getAllUsers(userSpace, userEmail);
+		//List<UserBoundary> rv = this.userService.getAllUsers(userSpace, userEmail);
+		//return rv.toArray(new UserBoundary[0]);
+
 		
-		/*
-		 * UserBoundary[] rv = new UserBoundary[] { new UserBoundary(new
-		 * UserID(userSpace, userEmail), "QA", "username", "Cat") };
-		 * System.out.println(rv);
-		 */
-		return rv.toArray(new UserBoundary[0]);
+		 UserBoundary[] rv = new UserBoundary[] { new UserBoundary(new
+		  UserID(userSpace, userEmail), "QA", "username", "Cat") };
+		  System.out.println(rv);
+		 return rv;
 	}
 
 }
