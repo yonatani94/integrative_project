@@ -10,7 +10,6 @@ import javax.persistence.Transient;
 
 import restapi.models.InvokedBy;
 import restapi.models.Item;
-import restapi.models.ItemID;
 import restapi.models.OperationId;
 
 @Entity
@@ -37,11 +36,10 @@ public class OperationEntity {
 		this.operationId = operationId;
 	}
 
-	@Transient
 	public String getType() {
 		return type;
 	}
-
+	
 	@Transient
 	public void setType(String type) {
 		this.type = type;
