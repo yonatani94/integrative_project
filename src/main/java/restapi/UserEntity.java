@@ -1,4 +1,4 @@
-package twins.logic;
+package restapi;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import restapi.UserEntity;
 import restapi.boundarys.UserBoundary;
 import restapi.models.UserID;
 

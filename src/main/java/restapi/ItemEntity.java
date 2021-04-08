@@ -1,4 +1,4 @@
-package twins.data;
+package restapi;
 
 import java.util.Date;
 import java.util.Map;
@@ -15,7 +15,7 @@ import restapi.models.Location;
 @Entity
 @Table(name="ITEMS")
 public class ItemEntity {
-	private ItemID itemID;
+	//private ItemID itemID; TODO change to id
 	private String type;
 	private String name;
 	private boolean active;
@@ -28,21 +28,13 @@ public class ItemEntity {
 		
 	}
 	
+	
 	@Id
-	public ItemID getItemID() {
-		return itemID;
-	}
-	
-	public void setItemID(ItemID itemID) {
-		this.itemID = itemID;
-	}
-	
-	@Transient
 	public String getType() {
 		return type;
 	}
 	
-	@Transient
+	
 	public void setType(String type) {
 		this.type = type;
 	}
