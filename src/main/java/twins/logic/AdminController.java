@@ -1,4 +1,4 @@
-package restapi.controllers;
+package twins.logic;
 
 import java.util.List;
 
@@ -12,16 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 import restapi.boundarys.UserBoundary;
 
 import restapi.models.UserID;
-import twins.logic.UsersService;
 
 @RestController
 public class AdminController {
-	/*
-	 * private UsersService userService;
-	 * 
-	 * @Autowired public void setUserService(UsersService userService) {
-	 * this.userService = userService; }
-	 */
+	private UsersService userService;
+	
+	
+	  @Autowired 
+	  public void setUserService(UsersService userService) {
+	  this.userService = userService; 
+	  }
+	 
+	 
 
 	@RequestMapping(path = "/twins/admin/users/{userSpace}/{userEmail}", method = RequestMethod.DELETE)
 	public void DeleteAllUser(@PathVariable("userSpace") String userSpace,
@@ -46,14 +48,14 @@ public class AdminController {
 	public UserBoundary[] getUsers(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
 
-		//List<UserBoundary> rv = this.userService.getAllUsers(userSpace, userEmail);
-		//return rv.toArray(new UserBoundary[0]);
+		List<UserBoundary> rv = this.userService.getAllUsers(userSpace, userEmail);
+		return rv.toArray(new UserBoundary[0]);
 
-		
-		 UserBoundary[] rv = new UserBoundary[] { new UserBoundary(new
-		  UserID(userSpace, userEmail), "QA", "username", "Cat") };
-		  System.out.println(rv);
-		 return rv;
+		/*
+		 * UserBoundary[] rv = new UserBoundary[] { new UserBoundary(new
+		 * UserID(userSpace, userEmail), "QA", "username", "Cat") };
+		 * System.out.println(rv); return rv;
+		 */
 	}
 
 }

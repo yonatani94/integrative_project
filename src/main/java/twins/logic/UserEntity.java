@@ -1,4 +1,4 @@
-package twins.data;
+package twins.logic;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -9,7 +9,12 @@ import restapi.models.UserID;
 @Entity
 @Table(name="USERS")
 public class UserEntity {
-	private UserID userId;
+	private String space;
+	private String email;
+	
+	
+	
+
 	private String role;
 	private String username;
 	private String avatar;
@@ -19,22 +24,29 @@ public class UserEntity {
 	}
 
 	@Id
-	public UserID getUserId() {
-		return userId;
+	public String getSpace() {
+		return space;
 	}
 
-	public void setUserId(UserID userId) {
-		this.userId = userId;
+	public void setSpace(String space) {
+		this.space = space;
 	}
 
 	public String getRole() {
 		return role;
 	}
 	
+
 	public void setRole(String role) {
 		this.role = role;
 	}
+	public String getEmail() {
+		return email;
+	}
 
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	public String getUsername() {
 		return username;
 	}

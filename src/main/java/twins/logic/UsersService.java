@@ -3,8 +3,8 @@ package twins.logic;
 
 import java.util.List;
 
-import restapi.boundarys.UserBoundary;
 
+import restapi.boundarys.UserBoundary;
 public interface UsersService  {
 
 	public UserBoundary createUser(UserBoundary user);

@@ -7,13 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import restapi.boundarys.UserBoundary;
-import twins.data.UserEntity;
+import restapi.models.UserID;
 
 
 @Service
 public class UserLogicImplementation implements UsersService {
 	private UserDao userDao;
 	
+
 	@Autowired
 	public UserLogicImplementation(UserDao userDao) {
 		super();
@@ -41,26 +42,25 @@ public class UserLogicImplementation implements UsersService {
 
 	@Override
 	public List<UserBoundary> getAllUsers(String adminSpace, String adminEmail) {
-		Iterable<UserEntity> allEntities = this.userDao
-				.findAll();
+		Iterable<UserEntity> allEntities = this.userDao.findAll();
 			
-			List<UserBoundary> rv = new ArrayList<>();
-			for (UserEntity entity : allEntities) {
-				// TODO create a generic converter from entity to boundary
-				UserBoundary boundary = new UserBoundary();
-				
-				
-				 boundary.setUserId(entity.getUserId());
-				 boundary.setUsername(entity.getUsername());
-				 boundary.setRole(entity.getRole());
-				 boundary.setAvatar(entity.getAvatar());
-				 
-				
-				rv.add(boundary);
+				List<UserBoundary> rv = new ArrayList<>();
+				for (UserEntity entity : allEntities) {
+					// TODO create a generic converter from entity to boundary
+					UserBoundary boundary = new UserBoundary();
+					
+					
+					 boundary.setUserId(new UserID(entity.getSpace(), entity.getEmail()));
+					 boundary.setUsername(entity.getUsername());
+					 boundary.setRole(entity.getRole());
+					 boundary.setAvatar(entity.getAvatar());
+					 
+					
+					rv.add(boundary);
+					
 			}
+				return rv;
 			
-			
-			return rv;
 	}
 
 	@Override
