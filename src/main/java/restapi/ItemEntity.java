@@ -15,7 +15,9 @@ import restapi.models.Location;
 @Entity
 @Table(name="ITEMS")
 public class ItemEntity {
-	//private ItemID itemID; TODO change to id
+	private String id;
+	private String space;
+	
 	private String type;
 	private String name;
 	private boolean active;
@@ -30,6 +32,25 @@ public class ItemEntity {
 	
 	
 	@Id
+	public String getId() {
+		return id;
+	}
+
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	public String getSpace() {
+		return space;
+	}
+
+
+	public void setSpace(String space) {
+		this.space = space;
+	}
+
+
 	public String getType() {
 		return type;
 	}
