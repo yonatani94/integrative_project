@@ -8,9 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import restapi.models.InvokedBy;
-import restapi.models.Item;
-import restapi.models.OperationId;
+import twins.digitalItemAPI.Item;
+import twins.operationsAPI.InvokedBy;
+import twins.operationsAPI.OperationId;
 
 @Entity
 @Table(name="OPERATIONS")
@@ -27,20 +27,20 @@ public class OperationEntity {
 		
 	}
 
-	@Id
+	@Transient
 	public OperationId getOperationId() {
 		return operationId;
 	}
-
+	@Transient
 	public void setOperationId(OperationId operationId) {
 		this.operationId = operationId;
 	}
-
+	@Id
 	public String getType() {
 		return type;
 	}
 	
-	@Transient
+	
 	public void setType(String type) {
 		this.type = type;
 	}

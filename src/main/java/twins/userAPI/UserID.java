@@ -1,5 +1,4 @@
-package restapi.models;
-
+package twins.userAPI;
 public class UserID {
 
 	private String space;

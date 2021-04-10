@@ -1,5 +1,4 @@
-package restapi.models;
-
+package twins.digitalItemAPI;
 public class Location {
 
 	private double lat;

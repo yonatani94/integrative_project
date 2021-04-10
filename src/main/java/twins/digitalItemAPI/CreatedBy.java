@@ -1,4 +1,6 @@
-package restapi.models;
+package twins.digitalItemAPI;
+
+import twins.userAPI.UserID;
 
 public class CreatedBy {
 	private UserID userId;

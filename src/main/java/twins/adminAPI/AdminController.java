@@ -1,4 +1,4 @@
-package twins.logic;
+package twins.adminAPI;
 
 import java.util.List;
 
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import restapi.boundarys.UserBoundary;
-
-import restapi.models.UserID;
+import twins.logic.UsersService;
+import twins.userAPI.UserBoundary;
+import twins.userAPI.UserID;
 
 @RestController
 public class AdminController {

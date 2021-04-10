@@ -1,5 +1,4 @@
-package restapi.models;
-
+package twins.userAPI;
 public class NewUserDetails {
 	String email;
 	String role;

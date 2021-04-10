@@ -1,20 +1,17 @@
-package restapi;
+package twins.data;
+
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import restapi.models.UserID;
+import twins.userAPI.UserID;
 
 @Entity
 @Table(name="USERS")
 public class UserEntity {
 	private String space;
 	private String email;
-	
-	
-	
-
 	private String role;
 	private String username;
 	private String avatar;
@@ -31,7 +28,13 @@ public class UserEntity {
 	public void setSpace(String space) {
 		this.space = space;
 	}
+	public String getEmail() {
+		return email;
+	}
 
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	public String getRole() {
 		return role;
 	}
@@ -40,13 +43,7 @@ public class UserEntity {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
+	
 	public String getUsername() {
 		return username;
 	}

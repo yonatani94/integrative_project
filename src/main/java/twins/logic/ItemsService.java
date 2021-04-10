@@ -2,7 +2,7 @@ package twins.logic;
 
 import java.util.List;
 
-import restapi.boundarys.ItemBoundary;
+import twins.digitalItemAPI.ItemBoundary;
 
 public interface ItemsService {
 	public ItemBoundary createItem(String userSpace, String userEmail, ItemBoundary item);

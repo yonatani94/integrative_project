@@ -5,13 +5,15 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import restapi.ItemEntity;
-import restapi.boundarys.ItemBoundary;
-import restapi.models.ItemID;
+import twins.data.ItemEntity;
+import twins.digitalItemAPI.ItemBoundary;
+import twins.digitalItemAPI.ItemID;
 
+@Service
 public class ItemLogicImplementation implements ItemsService  {
 	
 	private ItemDao itemDao;

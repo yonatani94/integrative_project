@@ -1,4 +1,4 @@
-package restapi.controllers;
+package twins.operationsAPI;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -14,12 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import restapi.boundarys.OperationBoundary;
-import restapi.models.InvokedBy;
-import restapi.models.Item;
-import restapi.models.ItemID;
-import restapi.models.OperationId;
-import restapi.models.UserID;
+import twins.digitalItemAPI.Item;
+import twins.digitalItemAPI.ItemID;
+import twins.userAPI.UserID;
 
 @RestController
 public class OperationsRelatedController {

@@ -1,4 +1,4 @@
-package restapi;
+package twins.data;
 
 import java.util.Date;
 import java.util.Map;
@@ -8,9 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import restapi.models.CreatedBy;
-import restapi.models.ItemID;
-import restapi.models.Location;
+import twins.digitalItemAPI.CreatedBy;
+import twins.digitalItemAPI.ItemID;
+import twins.digitalItemAPI.Location;
 
 @Entity
 @Table(name="ITEMS")

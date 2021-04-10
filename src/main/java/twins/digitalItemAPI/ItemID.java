@@ -1,33 +1,39 @@
-package restapi.models;
-
-public class OperationId {
+package twins.digitalItemAPI;
+public class ItemID {
 
 	private String space;
 	private String id;
-
-	public OperationId() {
+	
+	
+	public ItemID() {
 		super();
 	}
 
-	public OperationId(String space, String id) {
+
+	public ItemID(String space, String id) {
 		super();
 		this.space = space;
 		this.id = id;
 	}
+
 
 	public String getSpace() {
 		return space;
 	}
 
+
 	public void setSpace(String space) {
 		this.space = space;
 	}
+
 
 	public String getId() {
 		return id;
 	}
 
+
 	public void setId(String id) {
 		this.id = id;
 	}
+	
 }

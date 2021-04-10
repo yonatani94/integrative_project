@@ -2,7 +2,7 @@ package twins.logic;
 
 import org.springframework.data.repository.CrudRepository;
 
-import restapi.ItemEntity;
+import twins.data.ItemEntity;
 
 public interface ItemDao  extends CrudRepository<ItemEntity, String>{
 

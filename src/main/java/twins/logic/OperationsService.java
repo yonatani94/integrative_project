@@ -2,7 +2,7 @@ package twins.logic;
 
 import java.util.List;
 
-import restapi.boundarys.OperationBoundary;
+import twins.operationsAPI.OperationBoundary;
 
 public interface OperationsService {
 

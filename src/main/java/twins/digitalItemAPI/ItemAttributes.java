@@ -1,5 +1,4 @@
-package restapi.models;
-
+package twins.digitalItemAPI;
 public class ItemAttributes {
 	
 	private String key1;

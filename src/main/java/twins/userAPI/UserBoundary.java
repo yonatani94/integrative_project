@@ -1,6 +1,4 @@
-package restapi.boundarys;
-
-import restapi.models.UserID;
+package twins.userAPI;
 
 public class UserBoundary {
 
