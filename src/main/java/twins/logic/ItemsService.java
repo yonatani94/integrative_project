@@ -2,6 +2,7 @@ package twins.logic;
 
 import java.util.List;
 
+import twins.data.ItemEntity;
 import twins.digitalItemAPI.ItemBoundary;
 
 public interface ItemsService {
@@ -10,7 +11,7 @@ public interface ItemsService {
 	public ItemBoundary updateItem(String userSpace, String userEmail, String itemSpace, String itemId,
 			ItemBoundary update);
 
-	public List<ItemBoundary> getAllItems(String userSpace, String userEmail);
+	public Iterable<ItemEntity> getAllItems(String userSpace, String userEmail);
 
 	public ItemBoundary getSpecificItem(String userSpace, String userEmail, String itemSpace, String itemId);
 

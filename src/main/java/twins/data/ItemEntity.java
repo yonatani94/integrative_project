@@ -16,15 +16,16 @@ import twins.digitalItemAPI.Location;
 @Table(name="ITEMS")
 public class ItemEntity {
 	private String id;
+	
 	private String space;
+	private String email;
 	
 	private String type;
 	private String name;
 	private boolean active;
 	private Date createdTimestamp;
-	private CreatedBy createdBy;
 	private Location location;
-	private Map<String, Object> itemAttributes;
+	private String itemAttributes;
 	
 	public ItemEntity() {
 		
@@ -69,6 +70,17 @@ public class ItemEntity {
 	}
 	
 	@Transient
+	public String getEmail() {
+		return email;
+	}
+
+	@Transient
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	@Transient
 	public boolean isActive() {
 		return active;
 	}
@@ -88,15 +100,6 @@ public class ItemEntity {
 		this.createdTimestamp = createdTimestamp;
 	}
 	
-	@Transient
-	public CreatedBy getCreatedBy() {
-		return createdBy;
-	}
-	
-	@Transient
-	public void setCreatedBy(CreatedBy createdBy) {
-		this.createdBy = createdBy;
-	}
 	
 	@Transient
 	public Location getLocation() {
@@ -109,12 +112,12 @@ public class ItemEntity {
 	}
 	
 	@Transient
-	public Map<String, Object> getItemAttributes() {
+	public String getItemAttributes() {
 		return itemAttributes;
 	}
 	
 	@Transient
-	public void setItemAttributes(Map<String, Object> itemAttributes) {
+	public void setItemAttributes(String itemAttributes) {
 		this.itemAttributes = itemAttributes;
 	}
 	
