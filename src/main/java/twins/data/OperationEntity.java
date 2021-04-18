@@ -5,7 +5,10 @@ import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import twins.digitalItemAPI.Item;
@@ -13,77 +16,104 @@ import twins.operationsAPI.InvokedBy;
 import twins.operationsAPI.OperationId;
 
 @Entity
-@Table(name="OPERATIONS")
+@Table(name = "OPERATIONS")
 public class OperationEntity {
-	
-	private OperationId operationId;
+
+	private String operationSpace;
+	private String operationID;
 	private String type;
-	private Item item;
+	private String itemID;
+	private String itemSpace;
 	private Date createdTimestamp;
-	private InvokedBy invokedBy;
-	private Map<String, Object> operationAttributes;
-	
+	private String invokedByUserEmail;
+	private String invokedByUserSpace;
+	private String operationAttributes;
+
 	public OperationEntity() {
-		
+
 	}
 
-	@Transient
-	public OperationId getOperationId() {
-		return operationId;
+	public String getOperationSpace() {
+		return operationSpace;
 	}
-	@Transient
-	public void setOperationId(OperationId operationId) {
-		this.operationId = operationId;
+
+	public void setOperationSpace(String operationSpace) {
+		this.operationSpace = operationSpace;
 	}
+
 	@Id
+	public String getOperationID() {
+		return operationID;
+	}
+
+	public void setOperationID(String operationID) {
+		this.operationID = operationID;
+	}
+
 	public String getType() {
 		return type;
 	}
-	
-	
+
 	public void setType(String type) {
 		this.type = type;
 	}
 
-	@Transient
-	public Item getItem() {
-		return item;
+	public String getItemID() {
+		return itemID;
 	}
-	
-	@Transient
-	public void setItem(Item item) {
-		this.item = item;
+
+	public void setItemID(String itemID) {
+		this.itemID = itemID;
 	}
-	
-	@Transient
+
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
 	}
 
-	@Transient
 	public void setCreatedTimestamp(Date createdTimestamp) {
 		this.createdTimestamp = createdTimestamp;
 	}
 
-	@Transient
-	public InvokedBy getInvokedBy() {
-		return invokedBy;
-	}
-
-	@Transient
-	public void setInvokedBy(InvokedBy invokedBy) {
-		this.invokedBy = invokedBy;
-	}
-	
-	@Transient
-	public Map<String, Object> getOperationAttributes() {
+	@Lob
+	public String getOperationAttributes() {
 		return operationAttributes;
 	}
-	
-	@Transient
-	public void setOperationAttributes(Map<String, Object> operationAttributes) {
+
+	public void setOperationAttributes(String operationAttributes) {
 		this.operationAttributes = operationAttributes;
 	}
 
-	
+	public String getItemSpace() {
+		return itemSpace;
+	}
+
+	public void setItemSpace(String itemSpace) {
+		this.itemSpace = itemSpace;
+	}
+
+	public String getInvokedByUserSpace() {
+		return invokedByUserSpace;
+	}
+
+	public void setInvokedByUserSpace(String invokedByUserSpace) {
+		this.invokedByUserSpace = invokedByUserSpace;
+	}
+
+	public String getInvokedByUserEmail() {
+		return invokedByUserEmail;
+	}
+
+	public void setInvokedByUserEmail(String invokedByUserEmail) {
+		this.invokedByUserEmail = invokedByUserEmail;
+	}
+
+	@Override
+	public String toString() {
+		return "OperationEntity [operationSpace=" + operationSpace + ", operationID=" + operationID + ", type=" + type
+				+ ", itemID=" + itemID + ", itemSpace=" + itemSpace + ", createdTimestamp=" + createdTimestamp
+				+ ", invokedByUserEmail=" + invokedByUserEmail + ", invokedByUserSpace=" + invokedByUserSpace
+				+ ", operationAttributes=" + operationAttributes + "]";
+	}
+
 }

@@ -3,24 +3,27 @@ package twins.operationsAPI;
 import twins.userAPI.UserID;
 
 public class InvokedBy {
-
-	private UserID userID;
-
-	public UserID getUserID() {
-		return userID;
-	}
-
+	private UserID userId;
+	
 	public InvokedBy() {
 		super();
 	}
 
-	public void setUserID(UserID userID) {
-		this.userID = userID;
+	public InvokedBy(UserID userId) {
+		super();
+		this.userId = userId;
 	}
 
-	public InvokedBy(UserID userID) {
-		super();
-		this.userID = userID;
+	public UserID getUserId() {
+		return userId;
 	}
+
+	public void setUserId(UserID userId) {
+		this.userId = userId;
+	}
+	
+
+
+
 
 }

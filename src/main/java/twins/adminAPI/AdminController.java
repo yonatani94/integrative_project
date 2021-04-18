@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import twins.logic.OperationsService;
 import twins.logic.UsersService;
 import twins.userAPI.UserBoundary;
 import twins.userAPI.UserID;
@@ -16,14 +17,17 @@ import twins.userAPI.UserID;
 @RestController
 public class AdminController {
 	private UsersService userService;
-	
-	
-	  @Autowired 
-	  public void setUserService(UsersService userService) {
-	  this.userService = userService; 
-	  }
-	 
-	 
+	private OperationsService operationsService;
+
+	@Autowired
+	public void setUserService(UsersService userService) {
+		this.userService = userService;
+	}
+
+	@Autowired
+	public void setOperationsService(OperationsService operationsService) {
+		this.operationsService = operationsService;
+	}
 
 	@RequestMapping(path = "/twins/admin/users/{userSpace}/{userEmail}", method = RequestMethod.DELETE)
 	public void DeleteAllUser(@PathVariable("userSpace") String userSpace,
@@ -35,6 +39,7 @@ public class AdminController {
 	@RequestMapping(path = "/twins/admin/items/{userSpace}/{userEmail}", method = RequestMethod.DELETE)
 	public void DeleteAllItem(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
+		this.operationsService.deleteAllOperations(userSpace, userEmail);
 		return;
 	}
 

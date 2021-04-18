@@ -6,7 +6,7 @@ public class UserID {
 	
 	
 	public UserID() {
-	
+		super();
 	}
 	
 	public UserID(String space, String email) {
