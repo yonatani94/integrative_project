@@ -1,9 +1,7 @@
 package twins.digitalItemAPI;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,44 +9,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import twins.userAPI.UserBoundary;
-import twins.userAPI.UserID;
+import twins.logic.ItemsService;
 
 @RestController
 public class DigitalItemRelatedController {
+	private ItemsService itemsService ; 
+	
+	
+	@Autowired
+	public DigitalItemRelatedController(ItemsService itemsService) {
+		this.itemsService = itemsService;
+	}
 
 	@RequestMapping(path = "/twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ItemBoundary getOperations(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
-
-		// Maps for testing
-		Map<String, Object> itemAttributes = new HashMap<>();
-		itemAttributes.put("key1", "can be set to any value");
-		itemAttributes.put("key3", 58);
-		itemAttributes.put("key4", false);
-
-		ItemBoundary rv = new ItemBoundary(new ItemID(userSpace, "99"), "demoType", "demo Item", true, new Date(),
-				new CreatedBy(new UserID(userSpace, userEmail)), new Location(32.115139, 34.817804), itemAttributes);
-		System.out.println(rv);
-		return rv;
+		return this.getOperations(userSpace, userEmail);
 	}
 
 	@RequestMapping(path = "/twins/items/{userSpace}/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ItemBoundary[] getUser(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
 
-		// Maps for testing
-		Map<String, Object> itemAttributes = new HashMap<>();
-		itemAttributes.put("key1", "can be set to any value");
-		itemAttributes.put("key3", 58);
-		itemAttributes.put("key4", false);
-
-		ItemBoundary[] rv = new ItemBoundary[] { new ItemBoundary(new ItemID(userSpace, "99"), "demoType", "demo Item",
-				true, new Date(), new CreatedBy(new UserID(userSpace, userEmail)), new Location(32.115139, 34.817804),
-				itemAttributes) };
-
-		System.out.println(rv);
-		return rv;
+		return this.getUser(userSpace, userEmail);
 	}
 
 	@RequestMapping(
@@ -58,7 +41,7 @@ public class DigitalItemRelatedController {
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ItemBoundary createItem (@RequestBody ItemBoundary itemBoundary) {
 		// STUB IMPLEMENTATION 
-		return itemBoundary;
+		return this.createItem(itemBoundary);
 	}
 	
 	@RequestMapping(
@@ -67,7 +50,7 @@ public class DigitalItemRelatedController {
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void updateItem (@PathVariable("userSpace") String userSpace, @PathVariable("userEmail") String userEmail,
 			@PathVariable("itemSpace") String itemSpace, @PathVariable("itemId") String itemId, @RequestBody ItemBoundary itemBoundry) {
-		// STUB IMPLEMENTATION 
+		this.updateItem(userSpace, userEmail, itemSpace, itemId, itemBoundry); 
 	}
 	
 }
