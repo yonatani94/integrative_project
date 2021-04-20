@@ -5,8 +5,6 @@ import java.util.Map;
 
 import twins.digitalItemAPI.Item;
 
-
-
 public class OperationBoundary {
 
 	private OperationId operationId;

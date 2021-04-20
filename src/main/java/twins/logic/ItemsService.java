@@ -11,7 +11,7 @@ public interface ItemsService {
 	public ItemBoundary updateItem(String userSpace, String userEmail, String itemSpace, String itemId,
 			ItemBoundary update);
 
-	public Iterable<ItemEntity> getAllItems(String userSpace, String userEmail);
+	public List<ItemBoundary> getAllItems(String userSpace, String userEmail);
 
 	public ItemBoundary getSpecificItem(String userSpace, String userEmail, String itemSpace, String itemId);
 

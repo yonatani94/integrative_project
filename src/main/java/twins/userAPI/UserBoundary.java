@@ -6,7 +6,7 @@ public class UserBoundary {
 	private String role;
 	private String username;
 	private String avatar;
-	
+
 	public UserBoundary() {
 		super();
 	}
@@ -56,6 +56,5 @@ public class UserBoundary {
 		return "UserBoundary [userId=" + userId + ", role=" + role + ", username=" + username + ", avatar=" + avatar
 				+ "]";
 	}
-	
-	
+
 }

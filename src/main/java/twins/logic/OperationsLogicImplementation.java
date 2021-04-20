@@ -122,7 +122,7 @@ public class OperationsLogicImplementation implements OperationsService {
 	}
 
 	private OperationBoundary convertToBoundary(OperationEntity entity) {
-		
+
 		OperationBoundary boundary = new OperationBoundary();
 
 		boundary.setOperationId(new OperationId(entity.getOperationSpace(), entity.getOperationID()));

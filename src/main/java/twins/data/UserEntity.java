@@ -1,6 +1,5 @@
 package twins.data;
 
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -8,16 +7,16 @@ import javax.persistence.Table;
 import twins.userAPI.UserID;
 
 @Entity
-@Table(name="USERS")
+@Table(name = "USERS")
 public class UserEntity {
 	private String space;
 	private String email;
 	private String role;
 	private String username;
 	private String avatar;
-	
+
 	public UserEntity() {
-		
+
 	}
 
 	@Id
@@ -28,6 +27,7 @@ public class UserEntity {
 	public void setSpace(String space) {
 		this.space = space;
 	}
+
 	public String getEmail() {
 		return email;
 	}
@@ -35,15 +35,15 @@ public class UserEntity {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 	public String getRole() {
 		return role;
 	}
-	
 
 	public void setRole(String role) {
 		this.role = role;
 	}
-	
+
 	public String getUsername() {
 		return username;
 	}
@@ -59,5 +59,5 @@ public class UserEntity {
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
-	
+
 }

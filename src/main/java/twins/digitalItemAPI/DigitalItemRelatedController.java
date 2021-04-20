@@ -1,5 +1,6 @@
 package twins.digitalItemAPI;
 
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,9 +14,8 @@ import twins.logic.ItemsService;
 
 @RestController
 public class DigitalItemRelatedController {
-	private ItemsService itemsService ; 
-	
-	
+	private ItemsService itemsService;
+
 	@Autowired
 	public DigitalItemRelatedController(ItemsService itemsService) {
 		this.itemsService = itemsService;
@@ -23,34 +23,29 @@ public class DigitalItemRelatedController {
 
 	@RequestMapping(path = "/twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ItemBoundary getOperations(@PathVariable("userSpace") String userSpace,
-			@PathVariable("userEmail") String userEmail) {
-		return this.getOperations(userSpace, userEmail);
+			@PathVariable("userEmail") String userEmail, @PathVariable("itemSpace") String itemSpace,
+			@PathVariable("itemId") String itemId) {
+		return this.itemsService.getSpecificItem(userSpace, userEmail, itemSpace, itemId);
 	}
 
 	@RequestMapping(path = "/twins/items/{userSpace}/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ItemBoundary[] getUser(@PathVariable("userSpace") String userSpace,
+	public List<ItemBoundary> getUser(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
-
-		return this.getUser(userSpace, userEmail);
+		return this.itemsService.getAllItems(userSpace, userEmail);
 	}
 
-	@RequestMapping(
-			path = "/twins/items/{userSpace}/{userEmail}",
-			method = RequestMethod.POST,
-			produces = MediaType.APPLICATION_JSON_VALUE,
-			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ItemBoundary createItem (@RequestBody ItemBoundary itemBoundary) {
-		// STUB IMPLEMENTATION 
-		return this.createItem(itemBoundary);
+	@RequestMapping(path = "/twins/items/{userSpace}/{userEmail}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ItemBoundary createItem(@PathVariable("userSpace") String userSpace,
+			@PathVariable("userMail") String userMail, @RequestBody ItemBoundary itemBoundary) {
+
+		return this.itemsService.createItem(userSpace, userMail, itemBoundary);
 	}
-	
-	@RequestMapping(
-			path = "/twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}",
-			method = RequestMethod.PUT,
-			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void updateItem (@PathVariable("userSpace") String userSpace, @PathVariable("userEmail") String userEmail,
-			@PathVariable("itemSpace") String itemSpace, @PathVariable("itemId") String itemId, @RequestBody ItemBoundary itemBoundry) {
-		this.updateItem(userSpace, userEmail, itemSpace, itemId, itemBoundry); 
+
+	@RequestMapping(path = "/twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void updateItem(@PathVariable("userSpace") String userSpace, @PathVariable("userEmail") String userEmail,
+			@PathVariable("itemSpace") String itemSpace, @PathVariable("itemId") String itemId,
+			@RequestBody ItemBoundary itemBoundry) {
+		this.itemsService.updateItem(userSpace, userEmail, itemSpace, itemId, itemBoundry);
 	}
-	
+
 }

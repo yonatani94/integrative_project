@@ -1,14 +1,14 @@
 package twins.userAPI;
+
 public class UserID {
 
 	private String space;
 	private String email;
-	
-	
+
 	public UserID() {
 		super();
 	}
-	
+
 	public UserID(String space, String email) {
 		super();
 		this.space = space;
@@ -30,6 +30,5 @@ public class UserID {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
+
 }

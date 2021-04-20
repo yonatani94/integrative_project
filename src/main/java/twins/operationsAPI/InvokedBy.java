@@ -4,7 +4,7 @@ import twins.userAPI.UserID;
 
 public class InvokedBy {
 	private UserID userId;
-	
+
 	public InvokedBy() {
 		super();
 	}
@@ -21,9 +21,5 @@ public class InvokedBy {
 	public void setUserId(UserID userId) {
 		this.userId = userId;
 	}
-	
-
-
-
 
 }

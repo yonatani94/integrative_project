@@ -1,15 +1,16 @@
 package twins.digitalItemAPI;
+
 public class ItemAttributes {
-	
+
 	private String key1;
 	private String key2;
 	private int key3;
 	private boolean key4;
-	
+
 	public ItemAttributes() {
 		super();
 	}
-	
+
 	public ItemAttributes(String key1, String key2, int key3, boolean key4) {
 		super();
 		this.key1 = key1;
@@ -49,9 +50,5 @@ public class ItemAttributes {
 	public void setKey4(boolean key4) {
 		this.key4 = key4;
 	}
-
-	
-	
-	
 
 }
