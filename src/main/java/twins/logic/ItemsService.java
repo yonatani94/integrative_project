@@ -2,7 +2,6 @@ package twins.logic;
 
 import java.util.List;
 
-import twins.data.ItemEntity;
 import twins.digitalItemAPI.ItemBoundary;
 
 public interface ItemsService {

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import twins.logic.OperationsService;
 import twins.logic.UsersService;
 import twins.userAPI.UserBoundary;
-import twins.userAPI.UserID;
 
 @RestController
 public class AdminController {

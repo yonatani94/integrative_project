@@ -1,7 +1,6 @@
 package twins.data;
 
 import java.util.Date;
-import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -9,11 +8,7 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
-import twins.digitalItemAPI.Item;
-import twins.operationsAPI.InvokedBy;
-import twins.operationsAPI.OperationId;
 
 @Entity
 @Table(name = "OPERATIONS")

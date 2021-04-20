@@ -121,6 +121,7 @@ public class OperationsLogicImplementation implements OperationsService {
 
 	}
 
+	
 	private OperationBoundary convertToBoundary(OperationEntity entity) {
 
 		OperationBoundary boundary = new OperationBoundary();

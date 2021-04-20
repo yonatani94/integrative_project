@@ -14,11 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import twins.data.ItemEntity;
-import twins.data.OperationEntity;
 import twins.digitalItemAPI.CreatedBy;
 import twins.digitalItemAPI.ItemBoundary;
 import twins.digitalItemAPI.ItemID;
-import twins.operationsAPI.OperationBoundary;
 import twins.userAPI.UserID;
 
 @Service

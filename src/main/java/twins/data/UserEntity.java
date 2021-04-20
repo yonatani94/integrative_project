@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import twins.userAPI.UserID;
 
 @Entity
 @Table(name = "USERS")
