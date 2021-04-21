@@ -88,7 +88,6 @@ public class OperationsLogicImplementation implements OperationsService {
 	@Transactional // (readOnly = false)
 	public void deleteAllOperations(String adminSpace, String adminEmail) {
 		this.operationDao.deleteAll();
-
 	}
 
 	private OperationEntity convertFromBoundary(OperationBoundary boundary) {
@@ -121,9 +120,8 @@ public class OperationsLogicImplementation implements OperationsService {
 
 	}
 
-	
 	private OperationBoundary convertToBoundary(OperationEntity entity) {
-
+		
 		OperationBoundary boundary = new OperationBoundary();
 
 		boundary.setOperationId(new OperationId(entity.getOperationSpace(), entity.getOperationID()));

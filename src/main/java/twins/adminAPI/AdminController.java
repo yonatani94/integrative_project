@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import twins.logic.ItemsService;
 import twins.logic.OperationsService;
 import twins.logic.UsersService;
 import twins.userAPI.UserBoundary;
@@ -17,6 +18,7 @@ import twins.userAPI.UserBoundary;
 public class AdminController {
 	private UsersService userService;
 	private OperationsService operationsService;
+	private ItemsService itemsService;
 
 	@Autowired
 	public void setUserService(UsersService userService) {
@@ -28,24 +30,27 @@ public class AdminController {
 		this.operationsService = operationsService;
 	}
 
+	@Autowired
+	public void setItemsService(ItemsService itemsService) {
+		this.itemsService = itemsService;
+	}
+
 	@RequestMapping(path = "/twins/admin/users/{userSpace}/{userEmail}", method = RequestMethod.DELETE)
 	public void DeleteAllUser(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
-
-		return;
+		this.userService.deleteAllUsers(userSpace, userEmail);
 	}
 
 	@RequestMapping(path = "/twins/admin/items/{userSpace}/{userEmail}", method = RequestMethod.DELETE)
 	public void DeleteAllItem(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
-		this.operationsService.deleteAllOperations(userSpace, userEmail);
-		return;
+		this.itemsService.deleteAllItems(userSpace, userEmail);
 	}
 
 	@RequestMapping(path = "/twins/admin/operations/{userSpace}/{userEmail}", method = RequestMethod.DELETE)
 	public void DeleteAllOperation(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
-		return;
+		this.operationsService.deleteAllOperations(userSpace, userEmail);
 	}
 
 	@RequestMapping(path = "/twins/admin/users/{userSpace}/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -55,11 +60,6 @@ public class AdminController {
 		List<UserBoundary> rv = this.userService.getAllUsers(userSpace, userEmail);
 		return rv.toArray(new UserBoundary[0]);
 
-		/*
-		 * UserBoundary[] rv = new UserBoundary[] { new UserBoundary(new
-		 * UserID(userSpace, userEmail), "QA", "username", "Cat") };
-		 * System.out.println(rv); return rv;
-		 */
 	}
 
 }

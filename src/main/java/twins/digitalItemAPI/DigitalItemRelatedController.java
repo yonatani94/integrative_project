@@ -36,7 +36,7 @@ public class DigitalItemRelatedController {
 
 	@RequestMapping(path = "/twins/items/{userSpace}/{userEmail}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ItemBoundary createItem(@PathVariable("userSpace") String userSpace,
-			@PathVariable("userMail") String userMail, @RequestBody ItemBoundary itemBoundary) {
+			@PathVariable("userEmail") String userMail, @RequestBody ItemBoundary itemBoundary) {
 
 		return this.itemsService.createItem(userSpace, userMail, itemBoundary);
 	}

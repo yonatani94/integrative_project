@@ -37,6 +37,8 @@ public class ItemLogicImplementation implements ItemsService {
 	@Transactional // (readOnly = false)
 	public ItemBoundary createItem(String userSpace, String userEmail, ItemBoundary item) {
 
+		System.out.println(item.toString());
+
 		ItemEntity i = this.convertFromBoundary(item);
 		i.setCreatedTimestamp(new Date());
 		i.setId("" + this.atomicLong.getAndIncrement());
@@ -119,7 +121,7 @@ public class ItemLogicImplementation implements ItemsService {
 	private ItemBoundary convertToBoundary(ItemEntity entity) {
 		ItemBoundary boundary = new ItemBoundary();
 
-		boundary.setItemID(new ItemID(entity.getId(), entity.getSpace()));
+		boundary.setItemId(new ItemID(entity.getId(), entity.getSpace()));
 		boundary.setType(entity.getType());
 		boundary.setName(entity.getName());
 		boundary.setActive(entity.isActive());
@@ -135,8 +137,9 @@ public class ItemLogicImplementation implements ItemsService {
 	private ItemEntity convertFromBoundary(ItemBoundary boundary) {
 		ItemEntity entity = new ItemEntity();
 
-		entity.setId(boundary.getItemID().getId());
-		entity.setSpace(boundary.getItemID().getSpace());
+		entity.setId(boundary.getItemId().getId());
+
+		entity.setSpace(boundary.getItemId().getSpace());
 		entity.setEmail(boundary.getCreatedBy().getUserId().getEmail());
 		entity.setType(boundary.getType());
 		entity.setName(boundary.getName());

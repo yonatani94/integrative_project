@@ -32,11 +32,11 @@ public class ItemBoundary {
 		super();
 	}
 
-	public ItemID getItemID() {
+	public ItemID getItemId() {
 		return itemID;
 	}
 
-	public void setItemID(ItemID itemID) {
+	public void setItemId(ItemID itemID) {
 		this.itemID = itemID;
 	}
 
