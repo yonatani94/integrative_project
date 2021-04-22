@@ -4,7 +4,10 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import twins.digitalItemAPI.Location;
@@ -13,10 +16,8 @@ import twins.digitalItemAPI.Location;
 @Table(name = "ITEMS")
 public class ItemEntity {
 	private String id;
-
 	private String space;
 	private String email;
-
 	private String type;
 	private String name;
 	private boolean active;
@@ -61,32 +62,27 @@ public class ItemEntity {
 		this.name = name;
 	}
 
-	@Transient
 	public String getEmail() {
 		return email;
 	}
 
-	@Transient
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
-	@Transient
 	public boolean isActive() {
 		return active;
 	}
 
-	@Transient
 	public void setActive(boolean active) {
 		this.active = active;
 	}
 
-	@Transient
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
 	}
 
-	@Transient
 	public void setCreatedTimestamp(Date createdTimestamp) {
 		this.createdTimestamp = createdTimestamp;
 	}
@@ -101,12 +97,11 @@ public class ItemEntity {
 		this.location = location;
 	}
 
-	@Transient
+	@Lob
 	public String getItemAttributes() {
 		return itemAttributes;
 	}
 
-	@Transient
 	public void setItemAttributes(String itemAttributes) {
 		this.itemAttributes = itemAttributes;
 	}

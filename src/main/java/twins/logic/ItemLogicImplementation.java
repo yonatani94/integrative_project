@@ -31,6 +31,7 @@ public class ItemLogicImplementation implements ItemsService {
 		super();
 		this.itemDao = itemDao;
 		this.jackson = new ObjectMapper();
+		this.atomicLong = new AtomicLong();
 	}
 
 	@Override

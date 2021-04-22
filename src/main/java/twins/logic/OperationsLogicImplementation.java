@@ -57,12 +57,21 @@ public class OperationsLogicImplementation implements OperationsService {
 	@Override
 	public OperationBoundary invokeAsynchronousOperation(OperationBoundary operation) {
 
-		/*
-		 * Ask what to do here
-		 * 
-		 */
+		System.out.println(operation.toString());
 
-		return null;
+		// Tx - BEGIN
+
+		OperationEntity entity = this.convertFromBoundary(operation);
+		entity.setCreatedTimestamp(new Date());
+		entity.setOperationID("" + this.atomicLong.getAndIncrement());
+
+		// store entity to database using INSERT query
+		entity = this.operationDao.save(entity);
+
+		// on success: Tx COMMIT
+		// on exception: Tx ROLLBACK
+
+		return this.convertToBoundary(entity); // convert entity to boundary
 	}
 
 	@Override
