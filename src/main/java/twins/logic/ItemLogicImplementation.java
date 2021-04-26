@@ -135,15 +135,30 @@ public class ItemLogicImplementation implements ItemsService {
 		return boundary;
 	}
 
-	private ItemEntity convertFromBoundary(ItemBoundary boundary) {
+	private ItemEntity convertFromBoundary(ItemBoundary boundary){
 		ItemEntity entity = new ItemEntity();
+		if (boundary.getItemId() != null) {
+			entity.setId(boundary.getItemId().getId());
+			entity.setSpace(boundary.getItemId().getSpace());
+		}else {
+			System.out.println("Item id is null!");
+			
+		}
 
-		entity.setId(boundary.getItemId().getId());
+		if (boundary.getCreatedBy() != null) {
+			entity.setEmail(boundary.getCreatedBy().getUserId().getEmail());
+		}else {
+			System.out.println("Created By is null!");
+		}
 
-		entity.setSpace(boundary.getItemId().getSpace());
-		entity.setEmail(boundary.getCreatedBy().getUserId().getEmail());
+		if (boundary.getName() != null) {
+			entity.setName(boundary.getName());
+		}else {
+			System.out.println("Name is null!");
+		}
+
+
 		entity.setType(boundary.getType());
-		entity.setName(boundary.getName());
 		entity.setActive(boundary.isActive());
 		entity.setCreatedTimestamp(boundary.getCreatedTimestamp());
 		entity.setLocation(boundary.getLocation());
