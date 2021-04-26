@@ -54,11 +54,9 @@ public class AdminController {
 	}
 
 	@RequestMapping(path = "/twins/admin/users/{userSpace}/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary[] getUsers(@PathVariable("userSpace") String userSpace,
+	public List<UserBoundary> getUsers(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
-
-		List<UserBoundary> rv = this.userService.getAllUsers(userSpace, userEmail);
-		return rv.toArray(new UserBoundary[0]);
+		return  this.userService.getAllUsers(userSpace, userEmail);
 
 	}
 

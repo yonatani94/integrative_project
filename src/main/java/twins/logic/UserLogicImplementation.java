@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import twins.data.UserEntity;
+import twins.data.UserRole;
 import twins.userAPI.UserBoundary;
 import twins.userAPI.UserID;
 
@@ -104,9 +105,21 @@ public class UserLogicImplementation implements UsersService {
 			entity.setEmail(boundary.getUserId().getEmail());
 			entity.setSpace(boundary.getUserId().getSpace());
 		}
-		entity.setUsername(boundary.getUsername());
-		entity.setRole(boundary.getRole());
-		entity.setAvatar(boundary.getAvatar());
+		
+		if(boundary.getUsername()!=null)
+		{
+			entity.setUsername(boundary.getUsername());
+
+		}
+		if(boundary.getRole().equals(UserRole.ADMIN) || boundary.getRole().equals(UserRole.MANAGER) || boundary.getRole().equals(UserRole.PLAYER))
+		{
+			entity.setRole(boundary.getRole());
+		}
+		if(boundary.getAvatar()!=null || boundary.getAvatar().isEmpty()==true)
+		{
+			entity.setAvatar(boundary.getAvatar());
+		}
+		
 
 		return entity;
 

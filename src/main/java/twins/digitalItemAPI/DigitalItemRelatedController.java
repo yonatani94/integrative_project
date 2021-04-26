@@ -29,7 +29,7 @@ public class DigitalItemRelatedController {
 	}
 
 	@RequestMapping(path = "/twins/items/{userSpace}/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<ItemBoundary> getUser(@PathVariable("userSpace") String userSpace,
+	public List<ItemBoundary> getAllItems(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
 		return this.itemsService.getAllItems(userSpace, userEmail);
 	}
