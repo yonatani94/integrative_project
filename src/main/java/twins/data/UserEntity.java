@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.beans.factory.annotation.Value;
+
 
 @Entity
 @Table(name = "USERS")
@@ -23,6 +25,7 @@ public class UserEntity {
 		return space;
 	}
 
+	@Value("${spring.application.name:dummy}")
 	public void setSpace(String space) {
 		this.space = space;
 	}

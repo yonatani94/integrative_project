@@ -39,7 +39,6 @@ public class ItemLogicImplementation implements ItemsService {
 	public ItemBoundary createItem(String userSpace, String userEmail, ItemBoundary item) {
 
 		System.out.println(item.toString());
-
 		ItemEntity i = this.convertFromBoundary(item);
 		i.setCreatedTimestamp(new Date());
 		i.setId("" + this.atomicLong.getAndIncrement());
@@ -64,15 +63,15 @@ public class ItemLogicImplementation implements ItemsService {
 
 			updatedEntity = this.convertFromBoundary(update);
 
-			updatedEntity.setId(itemId);
-			updatedEntity.setSpace(itemSpace);
-			updatedEntity.setEmail(userEmail);
-			updatedEntity.setItemAttributes(existing.getItemAttributes());
-			updatedEntity.setActive(existing.isActive());
-			updatedEntity.setCreatedTimestamp(new Date());
-			updatedEntity.setLocation(existing.getLocation());
-			updatedEntity.setType(existing.getType());
-			updatedEntity.setName(userSpace);
+			updatedEntity.setId(existing.getId());
+			updatedEntity.setSpace(existing.getEmail());
+			updatedEntity.setEmail(existing.getEmail());
+			updatedEntity.setItemAttributes(this.marshal(update.getItemAttributes()));
+			updatedEntity.setActive(update.getActive());
+			updatedEntity.setCreatedTimestamp(existing.getCreatedTimestamp());
+			updatedEntity.setLocation(update.getLocation());
+			updatedEntity.setType(update.getType());
+			updatedEntity.setName(existing.getName());
 
 			this.itemDao.save(updatedEntity);
 		} else {
@@ -122,9 +121,13 @@ public class ItemLogicImplementation implements ItemsService {
 	private ItemBoundary convertToBoundary(ItemEntity entity) {
 		ItemBoundary boundary = new ItemBoundary();
 
-		boundary.setItemId(new ItemID(entity.getId(), entity.getSpace()));
-		boundary.setType(entity.getType());
-		boundary.setName(entity.getName());
+		boundary.setItemId(new ItemID(entity.getSpace(), entity.getId()));
+		if (entity.getType() == null || entity.getName() == null) {
+			throw new RuntimeException(); // TODO: return status = 404 instead of status = 500
+		} else {
+			boundary.setType(entity.getType());
+			boundary.setName(entity.getName());
+		}
 		boundary.setActive(entity.isActive());
 		boundary.setCreatedTimestamp(entity.getCreatedTimestamp());
 		boundary.setCreatedBy(new CreatedBy(new UserID(entity.getSpace(), entity.getEmail())));
@@ -135,31 +138,32 @@ public class ItemLogicImplementation implements ItemsService {
 		return boundary;
 	}
 
-	private ItemEntity convertFromBoundary(ItemBoundary boundary){
+	private ItemEntity convertFromBoundary(ItemBoundary boundary) {
 		ItemEntity entity = new ItemEntity();
 		if (boundary.getItemId() != null) {
+			// TODO: Split here with '@' to get id and space
 			entity.setId(boundary.getItemId().getId());
 			entity.setSpace(boundary.getItemId().getSpace());
-		}else {
+			entity.setIdSpace();
+		} else {
 			System.out.println("Item id is null!");
-			
+
 		}
 
 		if (boundary.getCreatedBy() != null) {
 			entity.setEmail(boundary.getCreatedBy().getUserId().getEmail());
-		}else {
+		} else {
 			System.out.println("Created By is null!");
 		}
 
 		if (boundary.getName() != null) {
 			entity.setName(boundary.getName());
-		}else {
+		} else {
 			System.out.println("Name is null!");
 		}
 
-
 		entity.setType(boundary.getType());
-		entity.setActive(boundary.isActive());
+		entity.setActive(boundary.getActive());
 		entity.setCreatedTimestamp(boundary.getCreatedTimestamp());
 		entity.setLocation(boundary.getLocation());
 

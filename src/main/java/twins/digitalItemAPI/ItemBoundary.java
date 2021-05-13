@@ -56,7 +56,7 @@ public class ItemBoundary {
 		this.name = name;
 	}
 
-	public boolean isActive() {
+	public boolean getActive() {
 		return active;
 	}
 

@@ -28,9 +28,14 @@ public class OperationsRelatedController {
 		return this.operationsService.getAllOperations(userSpace, userEmail);
 	}
 
-	@RequestMapping(path = "/twins/admin/operations/{userSpace}/{userEmail}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/twins/operations/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Object invokeOperation(@RequestBody OperationBoundary operationBoundary) {
 		return this.operationsService.invokeOperation(operationBoundary);
+	}
+
+	@RequestMapping(path = "/twins/operations/async", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Object invokeAsyncOperation(@RequestBody OperationBoundary operationBoundary) {
+		return this.operationsService.invokeAsynchronousOperation(operationBoundary);
 	}
 
 }

@@ -47,7 +47,7 @@ public class UserLogicImplementation implements UsersService {
 	@Override
 	public UserBoundary login(String userSpace, String userEmail) {
 		Optional<UserEntity> op = this.userDao.findById(userSpace);
-
+		// if user does not exist, throw exception
 		if (op.isPresent()) {
 			UserEntity entity = op.get();
 			return this.convertToBoundary(entity);
@@ -105,21 +105,18 @@ public class UserLogicImplementation implements UsersService {
 			entity.setEmail(boundary.getUserId().getEmail());
 			entity.setSpace(boundary.getUserId().getSpace());
 		}
-		
-		if(boundary.getUsername()!=null)
-		{
+
+		if (boundary.getUsername() != null) {
 			entity.setUsername(boundary.getUsername());
 
 		}
-		if(boundary.getRole().equals(UserRole.ADMIN) || boundary.getRole().equals(UserRole.MANAGER) || boundary.getRole().equals(UserRole.PLAYER))
-		{
+		if (boundary.getRole().equals(UserRole.ADMIN.name()) || boundary.getRole().equals(UserRole.MANAGER.name())
+				|| boundary.getRole().equals(UserRole.PLAYER.name())) {
 			entity.setRole(boundary.getRole());
 		}
-		if(boundary.getAvatar()!=null || boundary.getAvatar().isEmpty()==true)
-		{
+		if (boundary.getAvatar() != null || boundary.getAvatar().isEmpty() == true) {
 			entity.setAvatar(boundary.getAvatar());
 		}
-		
 
 		return entity;
 
@@ -127,11 +124,17 @@ public class UserLogicImplementation implements UsersService {
 
 	private UserBoundary convertToBoundary(UserEntity entity) {
 		UserBoundary boundary = new UserBoundary();
+		if (entity.getUsername() == null || entity.getRole() == null || entity.getAvatar() == null
+				|| entity.getEmail() == null) {
+			throw new RuntimeException(); // TODO: return status = 404 instead of status = 500
 
-		boundary.setUsername(entity.getUsername());
-		boundary.setUserId(new UserID(entity.getSpace(), entity.getEmail()));
-		boundary.setRole(entity.getRole());
-		boundary.setAvatar(entity.getAvatar());
+		} else {
+
+			boundary.setUsername(entity.getUsername());
+			boundary.setUserId(new UserID(entity.getSpace(), entity.getEmail()));
+			boundary.setRole(entity.getRole());
+			boundary.setAvatar(entity.getAvatar());
+		}
 
 		return boundary;
 	}

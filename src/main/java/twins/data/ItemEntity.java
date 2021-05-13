@@ -10,26 +10,39 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import twins.digitalItemAPI.Location;
 
 @Entity
 @Table(name = "ITEMS")
 public class ItemEntity {
+	//concat id and space
 	private String id;
 	private String space;
+	private String idSpace;
 	private String email;
 	private String type;
 	private String name;
 	private boolean active;
 	private Date createdTimestamp;
+	// Change location attribute to 2 doubles
 	private Location location;
 	private String itemAttributes;
 
 	public ItemEntity() {
 
 	}
-
+	
 	@Id
+	public String getIdSpace() {
+		return idSpace;
+	}
+
+	public void setIdSpace() {
+		this.idSpace = this.id+"@"+this.space;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -37,11 +50,13 @@ public class ItemEntity {
 	public void setId(String id) {
 		this.id = id;
 	}
-
+	
+	
 	public String getSpace() {
 		return space;
 	}
 
+	@Value("${spring.application.name:dummy}")
 	public void setSpace(String space) {
 		this.space = space;
 	}
@@ -87,6 +102,7 @@ public class ItemEntity {
 		this.createdTimestamp = createdTimestamp;
 	}
 
+	// Remove the object and split into lat and long
 	@Transient
 	public Location getLocation() {
 		return location;
