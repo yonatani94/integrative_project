@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 @Entity
 @Table(name = "OPERATIONS")
 public class OperationEntity {
-
+	
 	private String operationSpace;
 	private String operationID;
 	private String type;
@@ -25,10 +25,6 @@ public class OperationEntity {
 	private String invokedByUserEmail;
 	private String invokedByUserSpace;
 	private String operationAttributes;
-
-	public OperationEntity() {
-
-	}
 
 	public String getOperationSpace() {
 		return operationSpace;

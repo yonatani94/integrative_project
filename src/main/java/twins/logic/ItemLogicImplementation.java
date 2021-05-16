@@ -144,7 +144,7 @@ public class ItemLogicImplementation implements ItemsService {
 			// TODO: Split here with '@' to get id and space
 			entity.setId(boundary.getItemId().getId());
 			entity.setSpace(boundary.getItemId().getSpace());
-			entity.setIdSpace();
+			entity.setIdSpace(entity.getId()+"@"+entity.getSpace());
 		} else {
 			System.out.println("Item id is null!");
 

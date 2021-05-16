@@ -17,7 +17,7 @@ import twins.digitalItemAPI.Location;
 @Entity
 @Table(name = "ITEMS")
 public class ItemEntity {
-	//concat id and space
+	// concat id and space
 	private String id;
 	private String space;
 	private String idSpace;
@@ -33,14 +33,14 @@ public class ItemEntity {
 	public ItemEntity() {
 
 	}
-	
+
 	@Id
 	public String getIdSpace() {
 		return idSpace;
 	}
 
-	public void setIdSpace() {
-		this.idSpace = this.id+"@"+this.space;
+	public void setIdSpace(String idSpace) {
+		this.idSpace = idSpace;
 	}
 
 	public String getId() {
@@ -50,8 +50,7 @@ public class ItemEntity {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
-	
+
 	public String getSpace() {
 		return space;
 	}
