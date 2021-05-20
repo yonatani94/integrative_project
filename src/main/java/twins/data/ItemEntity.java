@@ -27,7 +27,9 @@ public class ItemEntity {
 	private boolean active;
 	private Date createdTimestamp;
 	// Change location attribute to 2 doubles
-	private Location location;
+	private double log;
+	private double lat;
+	
 	private String itemAttributes;
 
 	public ItemEntity() {
@@ -101,15 +103,20 @@ public class ItemEntity {
 		this.createdTimestamp = createdTimestamp;
 	}
 
-	// Remove the object and split into lat and long
-	@Transient
-	public Location getLocation() {
-		return location;
+	public double getLat() {
+		return lat;
 	}
 
-	@Transient
-	public void setLocation(Location location) {
-		this.location = location;
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+
+	public double getLog() {
+		return log;
+	}
+
+	public void setLog(double log) {
+		this.log = log;
 	}
 
 	@Lob

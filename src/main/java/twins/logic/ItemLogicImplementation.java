@@ -17,6 +17,7 @@ import twins.data.ItemEntity;
 import twins.digitalItemAPI.CreatedBy;
 import twins.digitalItemAPI.ItemBoundary;
 import twins.digitalItemAPI.ItemID;
+import twins.digitalItemAPI.Location;
 import twins.userAPI.UserID;
 
 @Service
@@ -69,7 +70,8 @@ public class ItemLogicImplementation implements ItemsService {
 			updatedEntity.setItemAttributes(this.marshal(update.getItemAttributes()));
 			updatedEntity.setActive(update.getActive());
 			updatedEntity.setCreatedTimestamp(existing.getCreatedTimestamp());
-			updatedEntity.setLocation(update.getLocation());
+			updatedEntity.setLog(update.getLocation().getLog());
+			updatedEntity.setLat(update.getLocation().getLat());
 			updatedEntity.setType(update.getType());
 			updatedEntity.setName(existing.getName());
 
@@ -131,7 +133,7 @@ public class ItemLogicImplementation implements ItemsService {
 		boundary.setActive(entity.isActive());
 		boundary.setCreatedTimestamp(entity.getCreatedTimestamp());
 		boundary.setCreatedBy(new CreatedBy(new UserID(entity.getSpace(), entity.getEmail())));
-		boundary.setLocation(entity.getLocation());
+		boundary.setLocation(new Location( entity.getLat(), entity.getLog()));
 		boundary.setItemAttributes(
 				((Map<String, Object>) this.unmarshal(entity.getItemAttributes().toString(), Map.class)));
 
@@ -165,7 +167,8 @@ public class ItemLogicImplementation implements ItemsService {
 		entity.setType(boundary.getType());
 		entity.setActive(boundary.getActive());
 		entity.setCreatedTimestamp(boundary.getCreatedTimestamp());
-		entity.setLocation(boundary.getLocation());
+		entity.setLog(boundary.getLocation().getLog());
+		entity.setLat(boundary.getLocation().getLat());
 
 		String json = this.marshal(boundary.getItemAttributes());
 		entity.setItemAttributes(json);
