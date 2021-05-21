@@ -134,6 +134,7 @@ public class UserLogicImplementation implements UsersService {
 		{
 			throw new RuntimeException("faild to get avatar"); // TODO: return status = 404 instead of status = 500
 		}
+		//
 
 		return entity;
 
