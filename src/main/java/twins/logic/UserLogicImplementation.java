@@ -34,7 +34,6 @@ public class UserLogicImplementation implements UsersService {
 	public UserBoundary createUser(UserBoundary input) {
 		// Tx - BEGIN
 		UserEntity entity = this.convertFromBoundary(input);
-		System.out.println("johnyzzzz sucsess in convert to entity " + entity.getUsername());
 
 		// store entity to database using INSERT query
 		entity = this.userDao.save(entity);
@@ -158,7 +157,6 @@ public class UserLogicImplementation implements UsersService {
 			boundary.setRole(userDeatalis.getRole());
 			boundary.setAvatar(userDeatalis.getAvatar());
 		}
-		System.out.println("johnyzzzz sucsess in convert");
 		return boundary;
 		
 	}
