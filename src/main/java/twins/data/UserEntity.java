@@ -1,6 +1,8 @@
 package twins.data;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 @Entity
 @Table(name = "USERS")
 public class UserEntity {
+	private String email_space;
 	private String space;
 	private String email;
 	private String role;
@@ -21,6 +24,13 @@ public class UserEntity {
 	}
 
 	@Id
+	public String getEmail_space() {
+		return email_space;
+	}
+	public void setEmail_space(String emailAndSpace) {
+		this.email_space = emailAndSpace;
+	}
+	
 	public String getSpace() {
 		return space;
 	}
@@ -61,5 +71,6 @@ public class UserEntity {
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
+	
 
 }

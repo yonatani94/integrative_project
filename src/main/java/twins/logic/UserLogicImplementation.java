@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,19 +13,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import twins.data.UserEntity;
 import twins.data.UserRole;
+import twins.userAPI.NewUserDetails;
 import twins.userAPI.UserBoundary;
 import twins.userAPI.UserID;
 
 @Service
 public class UserLogicImplementation implements UsersService {
 	private UserDao userDao;
-	private ObjectMapper jackson;
+	private String space;
 
 	@Autowired
-	public UserLogicImplementation(UserDao userDao, ObjectMapper jackso) {
+	public UserLogicImplementation(UserDao userDao) {
 		super();
 		this.userDao = userDao;
-		this.jackson = new ObjectMapper();
 
 	}
 
@@ -32,8 +33,8 @@ public class UserLogicImplementation implements UsersService {
 	@Transactional // (readOnly = false)
 	public UserBoundary createUser(UserBoundary input) {
 		// Tx - BEGIN
-
 		UserEntity entity = this.convertFromBoundary(input);
+		System.out.println("johnyzzzz sucsess in convert to entity " + entity.getUsername());
 
 		// store entity to database using INSERT query
 		entity = this.userDao.save(entity);
@@ -46,20 +47,20 @@ public class UserLogicImplementation implements UsersService {
 
 	@Override
 	public UserBoundary login(String userSpace, String userEmail) {
-		Optional<UserEntity> op = this.userDao.findById(userSpace);
+		Optional<UserEntity> op = this.userDao.findById(userEmail +"$" + userSpace);
 		// if user does not exist, throw exception
 		if (op.isPresent()) {
 			UserEntity entity = op.get();
 			return this.convertToBoundary(entity);
 		} else {
-			throw new RuntimeException(); // TODO: return status = 404 instead of status = 500
+			throw new RuntimeException("user is not exist"); // TODO: return status = 404 instead of status = 500
 		}
 	}
 
 	@Override
 	@Transactional // (readOnly = false)
 	public UserBoundary updateUser(String userSpace, String userEmail, UserBoundary update) {
-		Optional<UserEntity> op = this.userDao.findById(userSpace);
+		Optional<UserEntity> op = this.userDao.findById(userEmail +"$" + userSpace);
 
 		if (op.isPresent()) {
 			UserEntity existing = op.get();
@@ -104,29 +105,69 @@ public class UserLogicImplementation implements UsersService {
 		if (boundary.getUserId() != null) {
 			entity.setEmail(boundary.getUserId().getEmail());
 			entity.setSpace(boundary.getUserId().getSpace());
+			entity.setEmail_space(boundary.getUserId().getEmail() + "$" + boundary.getUserId().getSpace());
+		}
+		else 
+		{
+			throw new RuntimeException("faild to get userID"); // TODO: return status = 404 instead of status = 500
 		}
 
 		if (boundary.getUsername() != null) {
 			entity.setUsername(boundary.getUsername());
 
 		}
+		else 
+		{
+			throw new RuntimeException("faild to get user name"); // TODO: return status = 404 instead of status = 500
+		}
 		if (boundary.getRole().equals(UserRole.ADMIN.name()) || boundary.getRole().equals(UserRole.MANAGER.name())
 				|| boundary.getRole().equals(UserRole.PLAYER.name())) {
 			entity.setRole(boundary.getRole());
 		}
+		else 
+		{
+			throw new RuntimeException("faild to get role"); // TODO: return status = 404 instead of status = 500
+		}
 		if (boundary.getAvatar() != null || boundary.getAvatar().isEmpty() == true) {
 			entity.setAvatar(boundary.getAvatar());
+		}
+		else 
+		{
+			throw new RuntimeException("faild to get avatar"); // TODO: return status = 404 instead of status = 500
 		}
 
 		return entity;
 
 	}
-
+	@Value("${spring.application.name:dummy}")
+	public void setSpace(String space) {
+		this.space = space;
+	}
+	// TODO: 
+	public UserBoundary converNewtUserDeatailsToBoundary(NewUserDetails userDeatalis)
+	{
+		UserBoundary boundary = new UserBoundary();
+		if(userDeatalis.getEmail()== null || userDeatalis.getUsername()==null || userDeatalis.getAvatar()==null || userDeatalis.getRole()==null)
+		{
+			throw new RuntimeException("faild to convert in new user to boundry"); // TODO: return status = 404 instead of status = 500
+		}
+		else
+		{
+			boundary.setUsername(userDeatalis.getUsername());
+			boundary.setUserId(new UserID(this.space, userDeatalis.getEmail()));
+			boundary.setRole(userDeatalis.getRole());
+			boundary.setAvatar(userDeatalis.getAvatar());
+		}
+		System.out.println("johnyzzzz sucsess in convert");
+		return boundary;
+		
+	}
+	
 	private UserBoundary convertToBoundary(UserEntity entity) {
 		UserBoundary boundary = new UserBoundary();
 		if (entity.getUsername() == null || entity.getRole() == null || entity.getAvatar() == null
 				|| entity.getEmail() == null) {
-			throw new RuntimeException(); // TODO: return status = 404 instead of status = 500
+			throw new RuntimeException("cant conert to bouddry from entity"); // TODO: return status = 404 instead of status = 500
 
 		} else {
 
@@ -139,21 +180,6 @@ public class UserLogicImplementation implements UsersService {
 		return boundary;
 	}
 
-	// use Jackson to convert JSON to Object
-	private <T> T unmarshal(String json, Class<T> type) {
-		try {
-			return this.jackson.readValue(json, type);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
 
-	private String marshal(Object moreDetails) {
-		try {
-			return this.jackson.writeValueAsString(moreDetails);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
 
 }

@@ -2,6 +2,7 @@ package twins.logic;
 
 import java.util.List;
 
+import twins.userAPI.NewUserDetails;
 import twins.userAPI.UserBoundary;
 
 public interface UsersService {
@@ -15,5 +16,8 @@ public interface UsersService {
 	public List<UserBoundary> getAllUsers(String adminSpace, String adminEmail);
 
 	public void deleteAllUsers(String adminSpace, String adminEmail);
+	
+	public UserBoundary converNewtUserDeatailsToBoundary(NewUserDetails userDeatalis);
+	
 
 }

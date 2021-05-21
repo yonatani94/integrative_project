@@ -13,7 +13,6 @@ import twins.logic.UsersService;
 @RestController
 public class UserRelatedController {
 
-	// public String SPACE = "2021.project";
 	private UsersService userService;
 
 	@Autowired
@@ -22,7 +21,8 @@ public class UserRelatedController {
 	}
 
 	@RequestMapping(path = "/twins/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary createUser(@RequestBody UserBoundary user) {
+	public UserBoundary createUser(@RequestBody NewUserDetails userDeatalis) {
+		UserBoundary user = this.userService.converNewtUserDeatailsToBoundary(userDeatalis);
 		return this.userService.createUser(user);
 	}
 
