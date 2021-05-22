@@ -14,8 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import twins.data.ItemEntity;
 import twins.data.UserEntity;
 import twins.data.UserRole;
+import twins.digitalItemAPI.ItemBoundary;
 import twins.userAPI.NewUserDetails;
 import twins.userAPI.UserBoundary;
 import twins.userAPI.UserID;
@@ -49,7 +51,7 @@ public class UserLogicImplementation implements AdvancedUsersService {
 
 	@Override
 	public UserBoundary login(String userSpace, String userEmail) {
-		Optional<UserEntity> op = this.userDao.findById(userEmail +"$" + userSpace);
+		Optional<UserEntity> op = this.userDao.findById(userEmail + "$" + userSpace);
 		// if user does not exist, throw exception
 		if (op.isPresent()) {
 			UserEntity entity = op.get();
@@ -62,7 +64,7 @@ public class UserLogicImplementation implements AdvancedUsersService {
 	@Override
 	@Transactional // (readOnly = false)
 	public UserBoundary updateUser(String userSpace, String userEmail, UserBoundary update) {
-		Optional<UserEntity> op = this.userDao.findById(userEmail +"$" + userSpace);
+		Optional<UserEntity> op = this.userDao.findById(userEmail + "$" + userSpace);
 
 		if (op.isPresent()) {
 			UserEntity existing = op.get();
@@ -97,8 +99,28 @@ public class UserLogicImplementation implements AdvancedUsersService {
 
 	@Override
 	public void deleteAllUsers(String adminSpace, String adminEmail) {
-		this.userDao.deleteAll();
+		Optional<UserEntity> op = this.userDao.findById(adminEmail + "$" + adminSpace);
+		if (op.isPresent()) {
+			if (isUserAdmin(op))
+				this.userDao.deleteAll();
 
+		}
+
+		else {
+			throw new UserNotFoundException(); // TODO: return status = 404 instead of status = 500
+
+		}
+	}
+
+	public static boolean isUserAdmin(Optional<UserEntity> op) {
+		UserEntity existing = op.get();
+
+		if (existing.getRole().toString().equals(UserRole.ADMIN.name())) {
+
+			return true;
+		} else {
+			throw new RuntimeException("user is not admin");
+		}
 	}
 
 	private UserEntity convertFromBoundary(UserBoundary boundary) {
@@ -108,33 +130,25 @@ public class UserLogicImplementation implements AdvancedUsersService {
 			entity.setEmail(boundary.getUserId().getEmail());
 			entity.setSpace(boundary.getUserId().getSpace());
 			entity.setEmail_space(boundary.getUserId().getEmail() + "$" + boundary.getUserId().getSpace());
-		}
-		else 
-		{
+		} else {
 			throw new RuntimeException("faild to get userID"); // TODO: return status = 404 instead of status = 500
 		}
 
 		if (boundary.getUsername() != null) {
 			entity.setUsername(boundary.getUsername());
 
-		}
-		else 
-		{
+		} else {
 			throw new RuntimeException("faild to get user name"); // TODO: return status = 404 instead of status = 500
 		}
 		if (boundary.getRole().equals(UserRole.ADMIN.name()) || boundary.getRole().equals(UserRole.MANAGER.name())
 				|| boundary.getRole().equals(UserRole.PLAYER.name())) {
 			entity.setRole(boundary.getRole());
-		}
-		else 
-		{
+		} else {
 			throw new RuntimeException("faild to get role"); // TODO: return status = 404 instead of status = 500
 		}
 		if (boundary.getAvatar() != null || boundary.getAvatar().isEmpty() == true) {
 			entity.setAvatar(boundary.getAvatar());
-		}
-		else 
-		{
+		} else {
 			throw new RuntimeException("faild to get avatar"); // TODO: return status = 404 instead of status = 500
 		}
 		//
@@ -142,34 +156,35 @@ public class UserLogicImplementation implements AdvancedUsersService {
 		return entity;
 
 	}
+
 	@Value("${spring.application.name:dummy}")
 	public void setSpace(String space) {
 		this.space = space;
 	}
-	// TODO: 
-	public UserBoundary converNewtUserDeatailsToBoundary(NewUserDetails userDeatalis)
-	{
+
+	// TODO:
+	public UserBoundary converNewtUserDeatailsToBoundary(NewUserDetails userDeatalis) {
 		UserBoundary boundary = new UserBoundary();
-		if(userDeatalis.getEmail()== null || userDeatalis.getUsername()==null || userDeatalis.getAvatar()==null || userDeatalis.getRole()==null)
-		{
-			throw new RuntimeException("faild to convert in new user to boundry"); // TODO: return status = 404 instead of status = 500
-		}
-		else
-		{
+		if (userDeatalis.getEmail() == null || userDeatalis.getUsername() == null || userDeatalis.getAvatar() == null
+				|| userDeatalis.getRole() == null) {
+			throw new RuntimeException("faild to convert in new user to boundry"); // TODO: return status = 404 instead
+																					// of status = 500
+		} else {
 			boundary.setUsername(userDeatalis.getUsername());
 			boundary.setUserId(new UserID(this.space, userDeatalis.getEmail()));
 			boundary.setRole(userDeatalis.getRole());
 			boundary.setAvatar(userDeatalis.getAvatar());
 		}
 		return boundary;
-		
+
 	}
-	
+
 	private UserBoundary convertToBoundary(UserEntity entity) {
 		UserBoundary boundary = new UserBoundary();
 		if (entity.getUsername() == null || entity.getRole() == null || entity.getAvatar() == null
 				|| entity.getEmail() == null) {
-			throw new RuntimeException("cant conert to bouddry from entity"); // TODO: return status = 404 instead of status = 500
+			throw new RuntimeException("cant conert to bouddry from entity"); // TODO: return status = 404 instead of
+																				// status = 500
 
 		} else {
 
@@ -185,19 +200,29 @@ public class UserLogicImplementation implements AdvancedUsersService {
 	@Override
 	public List<UserBoundary> getAllUsers(String userSpace, String userEmail, int size, int page) {
 
-		Page<UserEntity> pageOfEntities = this.userDao.findAll(PageRequest.of(page, size,Direction.ASC,"role","email"));
-		
-		List<UserEntity> entities = pageOfEntities.getContent();
-		List<UserBoundary> rv = new ArrayList<>();
-		for (UserEntity entity : entities) {
-			UserBoundary boundary = convertToBoundary(entity);
-			rv.add(boundary);
+		Optional<UserEntity> op = this.userDao.findById(userEmail + "$" + userSpace);
+		if (op.isPresent()) {
+			if (isUserAdmin(op)) {
+
+				Page<UserEntity> pageOfEntities = this.userDao
+						.findAll(PageRequest.of(page, size, Direction.ASC, "role", "email"));
+
+				List<UserEntity> entities = pageOfEntities.getContent();
+				List<UserBoundary> rv = new ArrayList<>();
+				for (UserEntity entity : entities) {
+					UserBoundary boundary = convertToBoundary(entity);
+					rv.add(boundary);
+				}
+				return rv;
+			}
 		}
-		return rv;
 
-	
+		else {
+			throw new UserNotFoundException(); // TODO: return status = 404 instead of status = 500
+
+		}
+		throw new RuntimeException("user is not admin");
+
 	}
-
-
 
 }

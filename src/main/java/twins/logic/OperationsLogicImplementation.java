@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class OperationsLogicImplementation implements AdvancedOpretionsService {
 	private OperationDao operationDao;
 	private ObjectMapper jackson;
 	private AtomicLong atomicLong;
+	private UserDao userDao;
+
 
 	@Autowired
 	public OperationsLogicImplementation(OperationDao operationDao, ObjectMapper jackson) {
@@ -101,7 +104,17 @@ public class OperationsLogicImplementation implements AdvancedOpretionsService {
 	@Override
 	@Transactional // (readOnly = false)
 	public void deleteAllOperations(String adminSpace, String adminEmail) {
-		this.operationDao.deleteAll();
+		
+		Optional<UserEntity> op = this.userDao.findById(adminEmail + "$" + adminSpace);
+		if (op.isPresent()) {
+			if (UserLogicImplementation.isUserAdmin(op))
+				this.operationDao.deleteAll();
+		}
+
+		else {
+			throw new UserNotFoundException(); // TODO: return status = 404 instead of status = 500
+
+		}
 	}
 
 	private OperationEntity convertFromBoundary(OperationBoundary boundary) {
@@ -169,15 +182,29 @@ public class OperationsLogicImplementation implements AdvancedOpretionsService {
 
 	@Override
 	public List<OperationBoundary> getAllOperations(String userSpace, String userEmail, int size, int page) {
-		Page<OperationEntity> pageOfEntities = this.operationDao.findAll(PageRequest.of(page, size,Direction.ASC,"operationID"));
 		
-		List<OperationEntity> entities = pageOfEntities.getContent();
-		List<OperationBoundary> rv = new ArrayList<>();
-		for (OperationEntity entity : entities) {
-			OperationBoundary boundary = convertToBoundary(entity);
-			rv.add(boundary);
+		Optional<UserEntity> op = this.userDao.findById(userEmail + "$" + userSpace);
+		if (op.isPresent()) {
+			if (UserLogicImplementation.isUserAdmin(op)) {
+				Page<OperationEntity> pageOfEntities = this.operationDao.findAll(PageRequest.of(page, size,Direction.ASC,"operationID"));
+				
+				List<OperationEntity> entities = pageOfEntities.getContent();
+				List<OperationBoundary> rv = new ArrayList<>();
+				for (OperationEntity entity : entities) {
+					OperationBoundary boundary = convertToBoundary(entity);
+					rv.add(boundary);
+				}
+				return rv;
+			}
+			
 		}
-		return rv;
+		else {
+			throw new UserNotFoundException(); // TODO: return status = 404 instead of status = 500
+
+		}
+		throw new RuntimeException("user is not admin");
+
 	}
+	
 
 }

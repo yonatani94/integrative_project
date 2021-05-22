@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import twins.data.ItemEntity;
 import twins.data.UserEntity;
+import twins.data.UserRole;
 import twins.digitalItemAPI.CreatedBy;
 import twins.digitalItemAPI.ItemBoundary;
 import twins.digitalItemAPI.ItemID;
@@ -31,6 +32,7 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 	private ItemDao itemDao;
 	private ObjectMapper jackson;
 	private AtomicLong atomicLong;
+	private UserDao userDao;
 
 	@Autowired
 	public ItemLogicImplementation(ItemDao itemDao, ObjectMapper jackson) {
@@ -38,6 +40,8 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 		this.itemDao = itemDao;
 		this.jackson = new ObjectMapper();
 		this.atomicLong = new AtomicLong();
+		this.userDao = userDao;
+
 	}
 
 	@Override
@@ -121,10 +125,22 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 	@Override
 	@Transactional // (readOnly = false)
 	public void deleteAllItems(String adminSpace, String adminEmail) {
-		this.itemDao.deleteAll();
+		Optional<UserEntity> op = this.userDao.findById(adminEmail + "$" + adminSpace);
+		if (op.isPresent()) {
+			if (UserLogicImplementation.isUserAdmin(op))
+				this.itemDao.deleteAll();
+		}
+
+		else {
+			throw new UserNotFoundException(); // TODO: return status = 404 instead of status = 500
+
+		}
+
+		
 
 	}
-
+	
+	
 	private ItemBoundary convertToBoundary(ItemEntity entity) {
 		ItemBoundary boundary = new ItemBoundary();
 
@@ -213,6 +229,20 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 		}
 		return rv;
 		
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<ItemBoundary> getActiveItemsOnly(int size, int page) {
+		List<ItemEntity> allImportantEntities = this.itemDao
+			.findAllByActive(true, PageRequest.of(page, size, Direction.DESC, "messageTimestamp", "id"));
+		
+		List<ItemBoundary> rv = new ArrayList<>();
+		for (ItemEntity entity : allImportantEntities) {
+			ItemBoundary boundary = this.convertToBoundary(entity);
+			rv.add(boundary);
+		}
+		return rv;
 	}
 
 }

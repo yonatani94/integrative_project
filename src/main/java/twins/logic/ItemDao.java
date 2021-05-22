@@ -7,6 +7,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import twins.data.ItemEntity;
+import twins.digitalItemAPI.ItemBoundary;
 
 public interface ItemDao extends PagingAndSortingRepository<ItemEntity, String> {
 	
