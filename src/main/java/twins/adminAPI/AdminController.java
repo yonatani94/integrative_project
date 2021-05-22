@@ -7,8 +7,11 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import twins.logic.AdvancedItemsService;
+import twins.logic.AdvancedUsersService;
 import twins.logic.ItemsService;
 import twins.logic.OperationsService;
 import twins.logic.UsersService;
@@ -19,6 +22,7 @@ public class AdminController {
 	private UsersService userService;
 	private OperationsService operationsService;
 	private ItemsService itemsService;
+	private AdvancedUsersService advanceUsers;
 
 	@Autowired
 	public void setUserService(UsersService userService) {
@@ -34,7 +38,10 @@ public class AdminController {
 	public void setItemsService(ItemsService itemsService) {
 		this.itemsService = itemsService;
 	}
-
+	@Autowired
+	public void setAdvanceItem(AdvancedUsersService advanceUsers) {
+		this.advanceUsers = advanceUsers;
+	}
 	@RequestMapping(path = "/twins/admin/users/{userSpace}/{userEmail}", method = RequestMethod.DELETE)
 	public void DeleteAllUser(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
@@ -54,10 +61,15 @@ public class AdminController {
 	}
 
 	@RequestMapping(path = "/twins/admin/users/{userSpace}/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<UserBoundary> getUsers(@PathVariable("userSpace") String userSpace,
+	public List<UserBoundary> getUsers(
+			@RequestParam(name= "size", required = false , defaultValue = "10" ) int size,
+			@RequestParam(name= "page", required = false , defaultValue = "0" ) int page,
+			@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
-		return  this.userService.getAllUsers(userSpace, userEmail);
+		return  this.advanceUsers.getAllUsers(userSpace,userSpace,size, page);
 
 	}
+
+	
 
 }

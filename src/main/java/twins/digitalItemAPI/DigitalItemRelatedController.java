@@ -8,14 +8,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import twins.logic.AdvancedItemsService;
 import twins.logic.ItemsService;
 
 @RestController
 public class DigitalItemRelatedController {
 	private ItemsService itemsService;
-
+	private AdvancedItemsService advancedItem;
 	@Autowired
 	public DigitalItemRelatedController(ItemsService itemsService) {
 		this.itemsService = itemsService;
@@ -29,9 +31,12 @@ public class DigitalItemRelatedController {
 	}
 
 	@RequestMapping(path = "/twins/items/{userSpace}/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<ItemBoundary> getAllItems(@PathVariable("userSpace") String userSpace,
+	public List<ItemBoundary> getAllItems(
+			@RequestParam(name= "size", required = false , defaultValue = "10" ) int size,
+			@RequestParam(name= "page", required = false , defaultValue = "0" ) int page,
+			@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) {
-		return this.itemsService.getAllItems(userSpace, userEmail);
+		return this.advancedItem.getAllItems(userSpace, userEmail,size,page);
 	}
 
 	@RequestMapping(path = "/twins/items/{userSpace}/{userEmail}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -46,6 +51,11 @@ public class DigitalItemRelatedController {
 			@PathVariable("itemSpace") String itemSpace, @PathVariable("itemId") String itemId,
 			@RequestBody ItemBoundary itemBoundry) {
 		this.itemsService.updateItem(userSpace, userEmail, itemSpace, itemId, itemBoundry);
+	}
+
+	@Autowired
+	public void setAdvancedItem(AdvancedItemsService advancedItem) {
+		this.advancedItem = advancedItem;
 	}
 
 }

@@ -6,6 +6,9 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +21,7 @@ import twins.userAPI.UserBoundary;
 import twins.userAPI.UserID;
 
 @Service
-public class UserLogicImplementation implements UsersService {
+public class UserLogicImplementation implements AdvancedUsersService {
 	private UserDao userDao;
 	private String space;
 
@@ -177,6 +180,22 @@ public class UserLogicImplementation implements UsersService {
 		}
 
 		return boundary;
+	}
+
+	@Override
+	public List<UserBoundary> getAllUsers(String userSpace, String userEmail, int size, int page) {
+
+		Page<UserEntity> pageOfEntities = this.userDao.findAll(PageRequest.of(page, size,Direction.ASC,"role","email"));
+		
+		List<UserEntity> entities = pageOfEntities.getContent();
+		List<UserBoundary> rv = new ArrayList<>();
+		for (UserEntity entity : entities) {
+			UserBoundary boundary = convertToBoundary(entity);
+			rv.add(boundary);
+		}
+		return rv;
+
+	
 	}
 
 

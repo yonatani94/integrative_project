@@ -8,20 +8,25 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import twins.data.ItemEntity;
+import twins.data.UserEntity;
 import twins.digitalItemAPI.CreatedBy;
 import twins.digitalItemAPI.ItemBoundary;
 import twins.digitalItemAPI.ItemID;
 import twins.digitalItemAPI.Location;
+import twins.userAPI.UserBoundary;
 import twins.userAPI.UserID;
 
 @Service
-public class ItemLogicImplementation implements ItemsService {
+public class ItemLogicImplementation implements AdvancedItemsService {
 
 	private ItemDao itemDao;
 	private ObjectMapper jackson;
@@ -192,6 +197,22 @@ public class ItemLogicImplementation implements ItemsService {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public List<ItemBoundary> getAllItems(String userSpace, String userEmail, int size, int page) {
+
+		
+		Page<ItemEntity> pageOfEntities = this.itemDao.findAll(PageRequest.of(page, size,Direction.ASC,"id","createdTimestamp"));
+		
+		List<ItemEntity> entities = pageOfEntities.getContent();
+		List<ItemBoundary> rv = new ArrayList<>();
+		for (ItemEntity entity : entities) {
+			ItemBoundary boundary = convertToBoundary(entity);
+			rv.add(boundary);
+		}
+		return rv;
+		
 	}
 
 }

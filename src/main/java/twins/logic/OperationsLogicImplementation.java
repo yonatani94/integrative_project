@@ -7,21 +7,26 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import twins.data.OperationEntity;
+import twins.data.UserEntity;
 import twins.digitalItemAPI.Item;
 import twins.digitalItemAPI.ItemID;
 import twins.operationsAPI.InvokedBy;
 import twins.operationsAPI.OperationBoundary;
 import twins.operationsAPI.OperationId;
+import twins.userAPI.UserBoundary;
 import twins.userAPI.UserID;
 
 @Service
-public class OperationsLogicImplementation implements OperationsService {
+public class OperationsLogicImplementation implements AdvancedOpretionsService {
 	private OperationDao operationDao;
 	private ObjectMapper jackson;
 	private AtomicLong atomicLong;
@@ -160,6 +165,19 @@ public class OperationsLogicImplementation implements OperationsService {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public List<OperationBoundary> getAllOperations(String userSpace, String userEmail, int size, int page) {
+		Page<OperationEntity> pageOfEntities = this.operationDao.findAll(PageRequest.of(page, size,Direction.ASC,"operationID"));
+		
+		List<OperationEntity> entities = pageOfEntities.getContent();
+		List<OperationBoundary> rv = new ArrayList<>();
+		for (OperationEntity entity : entities) {
+			OperationBoundary boundary = convertToBoundary(entity);
+			rv.add(boundary);
+		}
+		return rv;
 	}
 
 }
