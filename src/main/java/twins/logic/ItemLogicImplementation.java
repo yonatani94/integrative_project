@@ -35,7 +35,7 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 	private UserDao userDao;
 
 	@Autowired
-	public ItemLogicImplementation(ItemDao itemDao, ObjectMapper jackson) {
+	public ItemLogicImplementation(ItemDao itemDao, ObjectMapper jackson,UserDao userDao) {
 		super();
 		this.itemDao = itemDao;
 		this.jackson = new ObjectMapper();
@@ -48,62 +48,91 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 	@Transactional // (readOnly = false)
 	public ItemBoundary createItem(String userSpace, String userEmail, ItemBoundary item) {
 
-		System.out.println(item.toString());
-		ItemEntity i = this.convertFromBoundary(item);
-		i.setCreatedTimestamp(new Date());
-		i.setId("" + this.atomicLong.getAndIncrement());
-		i.setEmail(userEmail);
-		i.setSpace(userSpace);
+		Optional<UserEntity> op = this.userDao.findById(userEmail + "$" + userSpace);
 
-		// store entity to database using INSERT query
-		i = this.itemDao.save(i);
+		if (op.isPresent()) {
+			if (isUserManger(op)) {
+				ItemEntity i = this.convertFromBoundary(item);
+				i.setCreatedTimestamp(new Date());
+				i.setId("" + this.atomicLong.getAndIncrement());
+				i.setEmail(userEmail);
+				i.setSpace(userSpace);
+				i.setIdSpace(userEmail + "$" + userSpace);
 
-		return this.convertToBoundary(i);
+				// store entity to database using INSERT query
+				i = this.itemDao.save(i);
+
+				return this.convertToBoundary(i);
+			}
+
+		}
+
+		else {
+			throw new UserNotFoundException(); // TODO: return status = 404 instead of status = 500
+
+		}
+		throw new RuntimeException("item cant create without permssion for MANGER"); // TODO: return status = 404
+																						// instead of status = 500
 	}
 
 	@Override
 	@Transactional // (readOnly = false)
 	public ItemBoundary updateItem(String userSpace, String userEmail, String itemSpace, String itemId,
 			ItemBoundary update) {
-		Optional<ItemEntity> op = this.itemDao.findById(itemId);
+		Optional<UserEntity> op_user = this.userDao.findById(userEmail + "$" + userSpace);
+		Optional<ItemEntity> op_item = this.itemDao.findById(userEmail + "$" + userSpace);
 
 		ItemEntity updatedEntity;
-		if (op.isPresent()) {
-			ItemEntity existing = op.get();
+		if (op_user.isPresent() && op_item.isPresent()) {
+			if (isUserManger(op_user)) {
+				ItemEntity existing = op_item.get();
 
-			updatedEntity = this.convertFromBoundary(update);
+				updatedEntity = this.convertFromBoundary(update);
 
-			updatedEntity.setId(existing.getId());
-			updatedEntity.setSpace(existing.getEmail());
-			updatedEntity.setEmail(existing.getEmail());
-			updatedEntity.setItemAttributes(this.marshal(update.getItemAttributes()));
-			updatedEntity.setActive(update.getActive());
-			updatedEntity.setCreatedTimestamp(existing.getCreatedTimestamp());
-			updatedEntity.setLog(update.getLocation().getLog());
-			updatedEntity.setLat(update.getLocation().getLat());
-			updatedEntity.setType(update.getType());
-			updatedEntity.setName(existing.getName());
+				updatedEntity.setId(existing.getId());
+				updatedEntity.setSpace(existing.getEmail());
+				updatedEntity.setEmail(existing.getEmail());
+				updatedEntity.setItemAttributes(this.marshal(update.getItemAttributes()));
+				updatedEntity.setActive(update.getActive());
+				updatedEntity.setCreatedTimestamp(existing.getCreatedTimestamp());
+				updatedEntity.setLog(update.getLocation().getLog());
+				updatedEntity.setLat(update.getLocation().getLat());
+				updatedEntity.setType(update.getType());
+				updatedEntity.setName(existing.getName());
+				updatedEntity.setIdSpace(existing.getEmail() + "$" + existing.getSpace());
 
-			this.itemDao.save(updatedEntity);
+				this.itemDao.save(updatedEntity);
+				return this.convertToBoundary(updatedEntity);
+
+			}
 		} else {
 			throw new RuntimeException(); // TODO: return status = 404 instead of status = 500
 		}
-		return this.convertToBoundary(updatedEntity);
+		throw new RuntimeException("item cant update without permssion for MANGER"); // TODO: return status = 404
+																						// instead of status = 500
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<ItemBoundary> getAllItems(String userSpace, String userEmail) {
-		Iterable<ItemEntity> allEntities = this.itemDao.findAll();
-
 		List<ItemBoundary> rv = new ArrayList<>();
-		for (ItemEntity entity : allEntities) {
-			ItemBoundary boundary = convertToBoundary(entity);
+		Optional<UserEntity> op = this.userDao.findById(userEmail + "$" + userSpace);
 
-			rv.add(boundary);
-		}
+		if (op.isPresent()) {
+			if (isUserManger(op)) {
+				Iterable<ItemEntity> allEntities = this.itemDao.findAll();
 
-		return rv;
+				for (ItemEntity entity : allEntities) {
+					ItemBoundary boundary = convertToBoundary(entity);
+
+					rv.add(boundary);
+				}
+
+			}
+			return rv;
+
+		} else
+			throw new UserNotFoundException();
 	}
 
 	@Override
@@ -111,14 +140,19 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 	public ItemBoundary getSpecificItem(String userSpace, String userEmail, String itemSpace, String itemId) {
 		// TODO Auto-generated method stub
 
-		Optional<ItemEntity> op = this.itemDao.findById(itemId);
+		Optional<ItemEntity> op_item = this.itemDao.findById(userEmail + "$" + userSpace);
+		Optional<UserEntity> op_user = this.userDao.findById(userEmail + "$" + userSpace);
 
-		if (op.isPresent()) {
-			ItemEntity entity = op.get();
-			return this.convertToBoundary(entity);
+		if (op_user.isPresent() && op_item.isPresent()) {
+			if (isUserManger(op_user)) {
+				ItemEntity entity = op_item.get();
+				return this.convertToBoundary(entity);
+			}
+			
 		} else {
-			throw new RuntimeException(); // TODO: return status = 404 instead of status = 500
+			throw new UserNotFoundException(); // TODO: return status = 404 instead of status = 500
 		}
+		throw new RuntimeException();
 
 	}
 
@@ -136,11 +170,8 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 
 		}
 
-		
-
 	}
-	
-	
+
 	private ItemBoundary convertToBoundary(ItemEntity entity) {
 		ItemBoundary boundary = new ItemBoundary();
 
@@ -154,7 +185,7 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 		boundary.setActive(entity.isActive());
 		boundary.setCreatedTimestamp(entity.getCreatedTimestamp());
 		boundary.setCreatedBy(new CreatedBy(new UserID(entity.getSpace(), entity.getEmail())));
-		boundary.setLocation(new Location( entity.getLat(), entity.getLog()));
+		boundary.setLocation(new Location(entity.getLat(), entity.getLog()));
 		boundary.setItemAttributes(
 				((Map<String, Object>) this.unmarshal(entity.getItemAttributes().toString(), Map.class)));
 
@@ -164,10 +195,10 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 	private ItemEntity convertFromBoundary(ItemBoundary boundary) {
 		ItemEntity entity = new ItemEntity();
 		if (boundary.getItemId() != null) {
-			// TODO: Split here with '@' to get id and space
+			// TODO: Split here with '$' to get id and space
 			entity.setId(boundary.getItemId().getId());
 			entity.setSpace(boundary.getItemId().getSpace());
-			entity.setIdSpace(entity.getId()+"@"+entity.getSpace());
+			entity.setIdSpace(entity.getEmail() + "$" + entity.getSpace());
 		} else {
 			System.out.println("Item id is null!");
 
@@ -218,9 +249,9 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 	@Override
 	public List<ItemBoundary> getAllItems(String userSpace, String userEmail, int size, int page) {
 
-		
-		Page<ItemEntity> pageOfEntities = this.itemDao.findAll(PageRequest.of(page, size,Direction.ASC,"id","createdTimestamp"));
-		
+		Page<ItemEntity> pageOfEntities = this.itemDao
+				.findAll(PageRequest.of(page, size, Direction.ASC, "id", "createdTimestamp"));
+
 		List<ItemEntity> entities = pageOfEntities.getContent();
 		List<ItemBoundary> rv = new ArrayList<>();
 		for (ItemEntity entity : entities) {
@@ -228,21 +259,32 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 			rv.add(boundary);
 		}
 		return rv;
-		
+
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<ItemBoundary> getActiveItemsOnly(int size, int page) {
-		List<ItemEntity> allImportantEntities = this.itemDao
-			.findAllByActive(true, PageRequest.of(page, size, Direction.DESC, "messageTimestamp", "id"));
-		
+		List<ItemEntity> allImportantEntities = this.itemDao.findAllByActive(true,
+				PageRequest.of(page, size, Direction.DESC, "messageTimestamp", "id"));
+
 		List<ItemBoundary> rv = new ArrayList<>();
 		for (ItemEntity entity : allImportantEntities) {
 			ItemBoundary boundary = this.convertToBoundary(entity);
 			rv.add(boundary);
 		}
 		return rv;
+	}
+
+	public static boolean isUserManger(Optional<UserEntity> op) {
+		UserEntity existing = op.get();
+
+		if (existing.getRole().toString().equals(UserRole.MANAGER.name())) {
+
+			return true;
+		} else {
+			throw new RuntimeException("user is not Manager");
+		}
 	}
 
 }
