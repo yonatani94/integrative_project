@@ -86,7 +86,7 @@ public class ItemEntity {
 		this.email = email;
 	}
 
-	public boolean isActive() {
+	public boolean getActive() {
 		return active;
 	}
 
