@@ -5,15 +5,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
+
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import twins.data.OperationEntity;
@@ -27,12 +35,12 @@ import twins.userAPI.UserBoundary;
 import twins.userAPI.UserID;
 
 @Service
-public class OperationsLogicImplementation implements AdvancedOpretionsService {
+public class OperationsLogicImplementation implements AdvancedOperationsService {
 	private OperationDao operationDao;
 	private ObjectMapper jackson;
 	private AtomicLong atomicLong;
 	private UserDao userDao;
-
+	private JmsTemplate jmsTemplate;
 
 	@Autowired
 	public OperationsLogicImplementation(OperationDao operationDao, ObjectMapper jackson) {
@@ -40,6 +48,11 @@ public class OperationsLogicImplementation implements AdvancedOpretionsService {
 		this.operationDao = operationDao;
 		this.jackson = new ObjectMapper();
 		this.atomicLong = new AtomicLong(1L);
+	}
+
+	@Autowired
+	public void setJmsTemplate(JmsTemplate jmsTemplate) {
+		this.jmsTemplate = jmsTemplate;
 	}
 
 	@Override
@@ -63,6 +76,7 @@ public class OperationsLogicImplementation implements AdvancedOpretionsService {
 	}
 
 	@Override
+	@Transactional // (readOnly = false)
 	public OperationBoundary invokeAsynchronousOperation(OperationBoundary operation) {
 
 		System.out.println(operation.toString());
@@ -104,7 +118,7 @@ public class OperationsLogicImplementation implements AdvancedOpretionsService {
 	@Override
 	@Transactional // (readOnly = false)
 	public void deleteAllOperations(String adminSpace, String adminEmail) {
-		
+
 		Optional<UserEntity> op = this.userDao.findById(adminEmail + "$" + adminSpace);
 		if (op.isPresent()) {
 			if (UserLogicImplementation.isUserAdmin(op))
@@ -148,7 +162,7 @@ public class OperationsLogicImplementation implements AdvancedOpretionsService {
 	}
 
 	private OperationBoundary convertToBoundary(OperationEntity entity) {
-		
+
 		OperationBoundary boundary = new OperationBoundary();
 
 		boundary.setOperationId(new OperationId(entity.getOperationSpace(), entity.getOperationID()));
@@ -182,12 +196,13 @@ public class OperationsLogicImplementation implements AdvancedOpretionsService {
 
 	@Override
 	public List<OperationBoundary> getAllOperations(String userSpace, String userEmail, int size, int page) {
-		
+
 		Optional<UserEntity> op = this.userDao.findById(userEmail + "$" + userSpace);
 		if (op.isPresent()) {
 			if (UserLogicImplementation.isUserAdmin(op)) {
-				Page<OperationEntity> pageOfEntities = this.operationDao.findAll(PageRequest.of(page, size,Direction.ASC,"operationID"));
-				
+				Page<OperationEntity> pageOfEntities = this.operationDao
+						.findAll(PageRequest.of(page, size, Direction.ASC, "operationID"));
+
 				List<OperationEntity> entities = pageOfEntities.getContent();
 				List<OperationBoundary> rv = new ArrayList<>();
 				for (OperationEntity entity : entities) {
@@ -196,15 +211,32 @@ public class OperationsLogicImplementation implements AdvancedOpretionsService {
 				}
 				return rv;
 			}
-			
-		}
-		else {
+
+		} else {
 			throw new UserNotFoundException(); // TODO: return status = 404 instead of status = 500
 
 		}
 		throw new RuntimeException("user is not admin");
 
 	}
-	
+
+	@Override
+	@Transactional
+	public OperationBoundary sendAndForget(OperationBoundary operation) {
+		try {
+			//Generate a new random ID 
+			operation.setOperationId(
+					new OperationId(operation.getOperationId().getSpace(), UUID.randomUUID().toString()));
+			String json = this.jackson.writeValueAsString(operation);
+			// Send a message to the destenation
+			this.jmsTemplate.send("MyMessages", session -> session.createTextMessage(json));
+
+			return operation; // meanwhile return something to the client
+			
+		} catch (JsonProcessingException e) {
+			System.out.println("Exception: " + e.getMessage());
+			throw new RuntimeException();
+		}
+	}
 
 }
