@@ -79,6 +79,13 @@ public class OperationsLogicImplementation implements AdvancedOperationsService 
 	@Transactional // (readOnly = false)
 	public OperationBoundary invokeAsynchronousOperation(OperationBoundary operation) {
 
+		try {
+			Thread.sleep(20000); // sleep test 30 seconds
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		System.out.println(operation.toString());
 
 		// Tx - BEGIN
@@ -229,8 +236,7 @@ public class OperationsLogicImplementation implements AdvancedOperationsService 
 					new OperationId(operation.getOperationId().getSpace(), UUID.randomUUID().toString()));
 			String json = this.jackson.writeValueAsString(operation);
 			// Send a message to the destenation
-			this.jmsTemplate.send("MyMessages", session -> session.createTextMessage(json));
-
+			this.jmsTemplate.send("MyOperations", session -> session.createTextMessage(json));
 			return operation; // meanwhile return something to the client
 			
 		} catch (JsonProcessingException e) {

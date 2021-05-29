@@ -22,7 +22,7 @@ public class MomListener {
 	}
 
 	
-	@JmsListener(destination="MyMessages")
+	@JmsListener(destination="MyOperations")
 	@Transactional
 	public void handleMessagesFromMom(String json) {
 		try {
