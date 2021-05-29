@@ -34,7 +34,7 @@ public class OperationsRelatedController {
 		return this.advancedOperations.getAllOperations(userSpace, userEmail, size, page);
 	}
 
-	@RequestMapping(path = "/twins/operations/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/twins/operations", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Object invokeOperation(@RequestBody OperationBoundary operationBoundary) {
 		return this.operationsService.invokeOperation(operationBoundary);
 	}
