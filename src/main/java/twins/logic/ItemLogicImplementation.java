@@ -57,7 +57,7 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 				i.setId("" + this.atomicLong.getAndIncrement());
 				i.setEmail(userEmail);
 				i.setSpace(userSpace);
-				i.setIdSpace(userEmail + "$" + userSpace);
+				i.setIdSpace(i.getId() + "$" + userSpace);
 
 				// store entity to database using INSERT query
 				i = this.itemDao.save(i);
@@ -80,7 +80,7 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 	public ItemBoundary updateItem(String userSpace, String userEmail, String itemSpace, String itemId,
 			ItemBoundary update) {
 		Optional<UserEntity> op_user = this.userDao.findById(userEmail + "$" + userSpace);
-		Optional<ItemEntity> op_item = this.itemDao.findById(userEmail + "$" + userSpace);
+		Optional<ItemEntity> op_item = this.itemDao.findById(itemId + "$" + userSpace);
 
 		ItemEntity updatedEntity;
 		if (op_user.isPresent() && op_item.isPresent()) {
@@ -99,7 +99,7 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 				updatedEntity.setLat(update.getLocation().getLat());
 				updatedEntity.setType(update.getType());
 				updatedEntity.setName(existing.getName());
-				updatedEntity.setIdSpace(existing.getEmail() + "$" + existing.getSpace());
+				updatedEntity.setIdSpace(existing.getId() + "$" + existing.getSpace());
 
 				this.itemDao.save(updatedEntity);
 				return this.convertToBoundary(updatedEntity);
@@ -140,7 +140,7 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 	public ItemBoundary getSpecificItem(String userSpace, String userEmail, String itemSpace, String itemId) {
 		// TODO Auto-generated method stub
 
-		Optional<ItemEntity> op_item = this.itemDao.findById(userEmail + "$" + userSpace);
+		Optional<ItemEntity> op_item = this.itemDao.findById(itemId + "$" + userSpace);
 		Optional<UserEntity> op_user = this.userDao.findById(userEmail + "$" + userSpace);
 
 		if (op_user.isPresent() && op_item.isPresent()) {
