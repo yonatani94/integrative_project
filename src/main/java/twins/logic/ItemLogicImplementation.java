@@ -50,11 +50,13 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 
 		Optional<UserEntity> op = this.userDao.findById(userEmail + "$" + userSpace);
 
+		System.out.println("" + item.toString());
+
 		if (op.isPresent()) {
 			if (isUserManger(op)) {
 				ItemEntity i = this.convertFromBoundary(item);
 				i.setCreatedTimestamp(new Date());
-				i.setId("" + this.atomicLong.getAndIncrement());
+				i.setId(item.getItemId().getId() + "");
 				i.setEmail(userEmail);
 				i.setSpace(userSpace);
 				i.setIdSpace(i.getId() + "$" + userSpace);
@@ -75,22 +77,63 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 																						// instead of status = 500
 	}
 
+	// /twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}
+	// {
+
+//    "itemId": {
+//        "space": "2021b.twins",
+//        "id": "99"
+//    },
+//    "type": "ConstructionProject",
+//    "name": "Project1",
+//    "active": true,
+//    "createdTimestamp": "2021-03-07T09:55:05.248+0000",
+//    "createdBy": {
+//        "userId": {
+//            "space": "2021b.twins",
+//            "email": "user2@demo.com"
+//        }
+//    },
+//    "location": {
+//        "lat": 32.115139,
+//        "lng": 34.817804
+//    },
+
+//    "itemAttributes": {  
+
+	// Construction Project -> Buildings -> Add a building to the array -> Convert
+	// to Json
+	// -> Put in item attributes -> Convert to Json -> Post to
+	// /twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}
+
+//        "key1": "can be set to any value you wish",
+//        "key2": "you can also name the attributes any name you like",
+//        "key3": 58,
+//        "key4": false
+//    }
+//}
+
 	@Override
 	@Transactional // (readOnly = false)
-	public ItemBoundary updateItem(String userSpace, String userEmail, String itemSpace, String itemId,
+	public ItemBoundary updateItem(String userSpace, String userEmail, String itemId, String itemSpace,
 			ItemBoundary update) {
+
+		System.out.println("User space: " + userSpace + " UserEmail: " + userEmail + " ItemSpace: " + itemSpace
+				+ " Item Id: " + itemId);
+		String tempIdSpace = itemId + "$" + itemSpace;
+
+		System.out.println("idSpace = " + tempIdSpace);
+
 		Optional<UserEntity> op_user = this.userDao.findById(userEmail + "$" + userSpace);
-		Optional<ItemEntity> op_item = this.itemDao.findById(itemId + "$" + userSpace);
+		Optional<ItemEntity> op_item = this.itemDao.findById(tempIdSpace);
 
 		ItemEntity updatedEntity;
 		if (op_user.isPresent() && op_item.isPresent()) {
 			if (isUserManger(op_user)) {
 				ItemEntity existing = op_item.get();
-
 				updatedEntity = this.convertFromBoundary(update);
-
 				updatedEntity.setId(existing.getId());
-				updatedEntity.setSpace(existing.getEmail());
+				updatedEntity.setSpace(existing.getSpace());
 				updatedEntity.setEmail(existing.getEmail());
 				updatedEntity.setItemAttributes(this.marshal(update.getItemAttributes()));
 				updatedEntity.setActive(update.getActive());
@@ -108,7 +151,7 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 		} else {
 			throw new RuntimeException(); // TODO: return status = 404 instead of status = 500
 		}
-		throw new RuntimeException("item cant update without permssion for MANGER"); // TODO: return status = 404
+		throw new RuntimeException("item cant update without permssion for MANGER"); // TODO: return status = 404 //
 																						// instead of status = 500
 	}
 
@@ -147,21 +190,15 @@ public class ItemLogicImplementation implements AdvancedItemsService {
 			if (isUserManger(op_user)) {
 				ItemEntity entity = op_item.get();
 				return this.convertToBoundary(entity);
-			}
-			else if(isUserPlayer(op_user)){
-					if(op_item.get().getActive())
-					{
-						ItemEntity entity = op_item.get();
-						return this.convertToBoundary(entity);
-					}
-					else
-					{
-						throw new ItemExceptionNotActive();
-					}
-			}
-			else
-				 throw new RuntimeException("no permssion are allowed");
-			
+			} else if (isUserPlayer(op_user)) {
+				if (op_item.get().getActive()) {
+					ItemEntity entity = op_item.get();
+					return this.convertToBoundary(entity);
+				} else {
+					throw new ItemExceptionNotActive();
+				}
+			} else
+				throw new RuntimeException("no permssion are allowed");
 
 		} else {
 			throw new UserNotFoundException(); // TODO: return status = 404 instead of status = 500

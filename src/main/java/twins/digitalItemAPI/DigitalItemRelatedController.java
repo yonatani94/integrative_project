@@ -41,16 +41,18 @@ public class DigitalItemRelatedController {
 
 	@RequestMapping(path = "/twins/items/{userSpace}/{userEmail}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ItemBoundary createItem(@PathVariable("userSpace") String userSpace,
-			@PathVariable("userEmail") String userMail, @RequestBody ItemBoundary itemBoundary) {
+			@PathVariable("userEmail") String userEmail, @RequestBody ItemBoundary itemBoundary) {
 
-		return this.itemsService.createItem(userSpace, userMail, itemBoundary);
+		return this.itemsService.createItem(userSpace, userEmail, itemBoundary);
 	}
+	
+
 
 	@RequestMapping(path = "/twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void updateItem(@PathVariable("userSpace") String userSpace, @PathVariable("userEmail") String userEmail,
 			@PathVariable("itemSpace") String itemSpace, @PathVariable("itemId") String itemId,
-			@RequestBody ItemBoundary itemBoundry) {
-		this.itemsService.updateItem(userSpace, userEmail, itemSpace, itemId, itemBoundry);
+			@RequestBody ItemBoundary itemBoundary) {
+		this.itemsService.updateItem(userSpace, userEmail, itemSpace, itemId, itemBoundary);
 	}
 
 	@Autowired

@@ -12,6 +12,8 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,9 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import twins.data.ItemEntity;
 import twins.data.OperationEntity;
 import twins.data.UserEntity;
 import twins.digitalItemAPI.Item;
+import twins.digitalItemAPI.ItemBoundary;
 import twins.digitalItemAPI.ItemID;
 import twins.operationsAPI.InvokedBy;
 import twins.operationsAPI.OperationBoundary;
@@ -36,16 +40,24 @@ import twins.userAPI.UserID;
 
 @Service
 public class OperationsLogicImplementation implements AdvancedOperationsService {
+
+	private final String ADD_BUILDING = "ADD_BUILDING";
+	private final String ADD_APARTMENT = "ADD_APARTMENT";
+	private final String ADD_FACILITY = "ADD_FACILITY";
+	private final String FETCH_APARTMENTS_BY_ID = "FETCH_APARTMENTS_BY_ID";
+
 	private OperationDao operationDao;
 	private ObjectMapper jackson;
 	private AtomicLong atomicLong;
 	private UserDao userDao;
+	private ItemDao itemDao;
 	private JmsTemplate jmsTemplate;
 
 	@Autowired
-	public OperationsLogicImplementation(OperationDao operationDao, ObjectMapper jackson) {
+	public OperationsLogicImplementation(OperationDao operationDao, ObjectMapper jackson, ItemDao itemDao) {
 		super();
 		this.operationDao = operationDao;
+		this.itemDao = itemDao;
 		this.jackson = new ObjectMapper();
 		this.atomicLong = new AtomicLong(1L);
 	}
@@ -60,7 +72,19 @@ public class OperationsLogicImplementation implements AdvancedOperationsService 
 	public Object invokeOperation(OperationBoundary operation) {
 		System.out.println(operation.toString());
 
-		// Tx - BEGIN
+		switch (operation.getType()) {
+
+		// Get all apartments of a specific building and return a list of apartments
+		case FETCH_APARTMENTS_BY_ID:
+			return (fetchApartmentsFromBuilding(operation));
+		case ADD_BUILDING:
+			addBuildingToProject(operation);
+			break;
+		case ADD_FACILITY:
+			break;
+		default:
+			break;
+		}
 
 		OperationEntity entity = this.convertFromBoundary(operation);
 		entity.setCreatedTimestamp(new Date());
@@ -69,23 +93,91 @@ public class OperationsLogicImplementation implements AdvancedOperationsService 
 		// store entity to database using INSERT query
 		entity = this.operationDao.save(entity);
 
-		// on success: Tx COMMIT
-		// on exception: Tx ROLLBACK
-
 		return this.convertToBoundary(entity); // convert entity to boundary
+	}
+
+	/** A method to add the building to a project */
+	private void addBuildingToProject(OperationBoundary operation) {
+		// Add building to the DB with parentID
+		//
+
+	}
+
+	/** Fetch all apartments from a building by building ID */
+
+	private Object fetchApartmentsFromBuilding(OperationBoundary operation) {
+		System.out.println("fetchApartmentsFromBuilding");
+
+		// I want to fetch all the apartments of building X
+		// I will iterate through all items which are of type "Apartment"
+		// I will add the apartments which their parent is building X to a list
+		// I will return the list of the apartments
+		// {
+		// "operationId": {
+		// "space": "2021b.twins",
+		// "id": "451"
+		// },
+		// "type": "GET_APARTMENTS",
+		// "item": {
+		// "itemId": {
+		// "space": "2021b.twins", ->>> It is possible to sent the building itemID here
+		// "id": "99"
+		// }
+		// },
+		// "createdTimestamp": "2021-03-07T09:57:13.109+0000",
+		// "invokedBy": {
+		// "userId": {
+		// "space": "2021b.twins",
+		// "email": "temp@mail.com"
+		// }
+		// },
+		// "operationAttributes": {
+		// "key1": "can be set to any value you wish", ->>> It is possible to send the
+		// building itemID here
+		// "key2": {
+		// "key2Subkey1": "can be nested json"
+		// }
+		// }
+		// }
+
+		String desiredBuildingId = operation.getItem().getItemId().getId(); // the desired building id
+
+		List<ItemEntity> apartmentList = this.itemDao.findAllByType("Apartment"); // list of all apartments
+		List<ItemEntity> relevantApartments = new ArrayList<>();
+
+		for (ItemEntity e : apartmentList) {
+			String tempAttributes = e.getItemAttributes(); // Get the extra Attributes Json
+			try {
+				JSONObject obj = new JSONObject(tempAttributes); // Extract Json from attributes
+				String tempParentId = obj.getString("parentID"); // Get the parent ID from the Json
+				if (tempParentId.equals(desiredBuildingId)) { // If it is the correct Id
+					relevantApartments.add(e); // Add proper apartment
+				}
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+		}
+		
+		for(ItemEntity e:relevantApartments) {
+			System.out.println(e.toString());
+		}
+		
+		return relevantApartments;
 	}
 
 	@Override
 	@Transactional // (readOnly = false)
 	public OperationBoundary invokeAsynchronousOperation(OperationBoundary operation) {
 
-		try {
-			Thread.sleep(20000); // sleep test 30 seconds
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+//		try {
+//			Thread.sleep(20000); // sleep test 30 seconds
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+
 		System.out.println(operation.toString());
 
 		// Tx - BEGIN
@@ -231,14 +323,14 @@ public class OperationsLogicImplementation implements AdvancedOperationsService 
 	@Transactional
 	public OperationBoundary sendAndForget(OperationBoundary operation) {
 		try {
-			//Generate a new random ID 
+			// Generate a new random ID
 			operation.setOperationId(
 					new OperationId(operation.getOperationId().getSpace(), UUID.randomUUID().toString()));
 			String json = this.jackson.writeValueAsString(operation);
 			// Send a message to the destenation
 			this.jmsTemplate.send("MyOperations", session -> session.createTextMessage(json));
 			return operation; // meanwhile return something to the client
-			
+
 		} catch (JsonProcessingException e) {
 			System.out.println("Exception: " + e.getMessage());
 			throw new RuntimeException();
@@ -246,4 +338,3 @@ public class OperationsLogicImplementation implements AdvancedOperationsService 
 	}
 
 }
-
