@@ -24,7 +24,7 @@ public class DigitalItemRelatedController {
 	}
 
 	@RequestMapping(path = "/twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ItemBoundary getOperations(@PathVariable("userSpace") String userSpace,
+	public ItemBoundary getSpecificItem(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail, @PathVariable("itemSpace") String itemSpace,
 			@PathVariable("itemId") String itemId) {
 		return this.itemsService.getSpecificItem(userSpace, userEmail, itemSpace, itemId);
